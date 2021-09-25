@@ -1,4 +1,4 @@
-const getRandomIntInclusive = function(min, max) {
+getRandomIntInclusive = function(min, max) {
   if (max > min && min>=0 ) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   } else {
@@ -6,7 +6,7 @@ const getRandomIntInclusive = function(min, max) {
   }
 };
 
-const getRandomFloat = function(min, max, precision) {
+getRandomFloat = function(min, max, precision) {
   if (max > min && min>=0 ) {
     const number = Math.random() * (max - min) + min;
     return number.toFixed(precision);
