@@ -27,7 +27,7 @@ const getRandomFloat = function(min, max, precision) {
 //console.log(getRandomIntInclusive(20, 30));
 //console.log(getRandomFloat(10.3, 10.4, 5));
 
-const AVATAR = [
+const avatars = [
   'img/avatars/user01.png',
   'img/avatars/user02.png',
   'img/avatars/user03.png',
@@ -40,7 +40,7 @@ const AVATAR = [
   'img/avatars/user10.png',
 ];
 
-const TITLE = [
+const titles = [
   'Дом для отпуска на берегу озера Маслозеро',
   'Отель Карелия',
   'Гостевой дом Онежский берег',
@@ -53,7 +53,7 @@ const TITLE = [
   'Дом для хороших гостей',
 ];
 
-const TYPE = [
+const types = [
   'palace',
   'flat',
   'house',
@@ -61,20 +61,20 @@ const TYPE = [
   'hotel',
 ];
 
-const CHECKIN = [
+const checkins = [
   '12:00',
   '13:00',
   '14:00',
 ];
 
-const CHECKOUT = [
+const checkouts = [
   '12:00',
   '13:00',
   '14:00',
 ];
 
 
-const DESCRIPTION = [
+const descriptions = [
   'Семейный дом — Дуплекс',
   'Дом с 2 спальнями',
   'Стандартный номер-студио',
@@ -87,23 +87,18 @@ const DESCRIPTION = [
   'Дом для отпуска',
 ];
 
-/*const PHOTOS = [
+const photos = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
-]; */
+];
 
-const PRICE = getRandomIntInclusive (10, 10000000);
-
-const ROOMS = getRandomIntInclusive (1, 100);
-
-const GUESTS = getRandomIntInclusive (1, 10000);
 
 const locationLAT = getRandomFloat (35.65000, 35.70000, 5);
 
 const locationLNG = getRandomFloat (139.70000, 139.80000, 5);
 
-const LOCATION = {
+const locationList = {
   lat: locationLAT,
   lng: locationLNG,
 };
@@ -114,7 +109,7 @@ const LOCATION = {
 ]; */
 
 
-const FEATURESList = [
+const featuresList = [
   'wifi',
   'dishwasher',
   'parking',
@@ -123,30 +118,14 @@ const FEATURESList = [
   'conditioner',
 ];
 
-function getArrayFeatures(featuresCount) {
-  // const maxLength = featuresCount.length;
-  const lengthOfArray = getRandomIntInclusive(1, featuresCount);
+function getRandomArrayFromArray(sourceArray) {
+
+  const lengthOfArray = sourceArray.length;
+  const featuresCount = getRandomIntInclusive(1, lengthOfArray);
   const array = [];
 
-  for(let ind = 0; ind < lengthOfArray; ind++) {
-    const indexOfEl = getRandomIntInclusive(0, 5);
-    const el = FEATURESList[indexOfEl];
-
-    if (!array.includes(el)) {
-      array.push(el);
-    }
-  }
-  return array;
-}
-
-function getArrayPhotos(PHOTOS) {
-  const maxLength = PHOTOS.length;
-  const lengthOfArray = getRandomIntInclusive(1, maxLength);
-  const array = [];
-
-  for(let ind = 0; ind < lengthOfArray; ind++) {
-    const indexOfEl = getRandomIntInclusive(0, 2);
-    const el = PHOTOS[indexOfEl];
+  for(let ind = 0; ind < featuresCount; ind++) {
+   const el = getRandomArrayElement(sourceArray)
 
     if (!array.includes(el)) {
       array.push(el);
@@ -156,36 +135,38 @@ function getArrayPhotos(PHOTOS) {
 }
 
 const getRandomArrayElement = (elements) =>
-  elements[_.random(0, elements.length - 1)];
+  elements[getRandomIntInclusive(0, elements.length - 1)];
 
 const createObject = () => ({
-  author: getRandomArrayElement(AVATAR),
+  author: getRandomArrayElement(avatars),
   offer: {
-    title: getRandomArrayElement(TITLE),
-    //address: locationLAT + ', ' + locationLNG,
-    price: PRICE,
-    type: getRandomArrayElement(TYPE),
-    rooms: ROOMS,
-    guests: GUESTS,
-    checkin: getRandomArrayElement(CHECKIN),
-    checkout: getRandomArrayElement(CHECKOUT),
-    features: getArrayFeatures,
-    description: getRandomArrayElement(DESCRIPTION),
-    photos: getArrayPhotos,
+    title: getRandomArrayElement(titles),
+    address: ''+locationLAT + ', ' + locationLNG,
+
+    price: getRandomIntInclusive (10, 10000000),
+    type: getRandomArrayElement(types),
+    rooms: getRandomIntInclusive (1, 100),
+    guests: getRandomIntInclusive (1, 10000),
+    checkin: getRandomArrayElement(checkins),
+    checkout: getRandomArrayElement(checkouts),
+    features: getRandomArrayFromArray(featuresList),
+    description: getRandomArrayElement(descriptions),
+    photos: getRandomArrayFromArray(photos),
   },
-  location: LOCATION,
+  location: locationList,
 });
 
 
-const generateObjectsList = function (OBJECTS_COUNT) {
+
+const generateObjectsList = function (createObject) {
   const objects = [];
 
-  for (let ind = 0; ind < OBJECTS_COUNT; ind++ ) {
+  for (let ind = 0; ind < createObject; ind++ ) {
     objects.push(generateObjectsList(ind));
   }
 
   return objects;
 };
 
-createObject ();
 generateObjectsList (10);
+console.log(createObject());
