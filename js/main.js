@@ -93,22 +93,6 @@ const photos = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
 
-
-const locationLAT = getRandomFloat (35.65000, 35.70000, 5);
-
-const locationLNG = getRandomFloat (139.70000, 139.80000, 5);
-
-const locationList = {
-  lat: locationLAT,
-  lng: locationLNG,
-};
-
-/*const ADDRESS = [
-  locationLAT,
-  locationLNG,
-]; */
-
-
 const featuresList = [
   'wifi',
   'dishwasher',
@@ -118,6 +102,10 @@ const featuresList = [
   'conditioner',
 ];
 
+const getRandomArrayElement = (elements) =>
+  elements[getRandomIntInclusive(0, elements.length - 1)];
+
+
 function getRandomArrayFromArray(sourceArray) {
 
   const lengthOfArray = sourceArray.length;
@@ -125,7 +113,7 @@ function getRandomArrayFromArray(sourceArray) {
   const array = [];
 
   for(let ind = 0; ind < featuresCount; ind++) {
-   const el = getRandomArrayElement(sourceArray)
+    const el = getRandomArrayElement(sourceArray);
 
     if (!array.includes(el)) {
       array.push(el);
@@ -134,14 +122,26 @@ function getRandomArrayFromArray(sourceArray) {
   return array;
 }
 
-const getRandomArrayElement = (elements) =>
-  elements[getRandomIntInclusive(0, elements.length - 1)];
+function getLocationList() {
+
+  const locationLAT = getRandomFloat (35.65000, 35.70000, 5);
+  const locationLNG = getRandomFloat (139.70000, 139.80000, 5);
+
+  const locationList = {
+    lat: locationLAT,
+    lng: locationLNG,
+  };
+
+  return locationList;
+}
 
 const createObject = () => ({
+
   author: getRandomArrayElement(avatars),
+  location: getLocationList(),
   offer: {
     title: getRandomArrayElement(titles),
-    address: ''+locationLAT + ', ' + locationLNG,
+    // address: String(this.location.lat) + ', ' + String(this.location.lng),
 
     price: getRandomIntInclusive (10, 10000000),
     type: getRandomArrayElement(types),
@@ -153,20 +153,18 @@ const createObject = () => ({
     description: getRandomArrayElement(descriptions),
     photos: getRandomArrayFromArray(photos),
   },
-  location: locationList,
+
 });
 
-
-
-const generateObjectsList = function (createObject) {
+const generateObjectsList = function (countCreateObject) {
   const objects = [];
 
-  for (let ind = 0; ind < createObject; ind++ ) {
-    objects.push(generateObjectsList(ind));
+  for (let ind = 0; ind < countCreateObject; ind++ ) {
+    objects.push(createObject());
   }
 
   return objects;
 };
 
 generateObjectsList (10);
-console.log(createObject());
+//console.log(createObject());
