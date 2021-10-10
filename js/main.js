@@ -138,7 +138,7 @@ const createObject = () => ({
   location: getLocationList(),
   offer: {
     title: getRandomArrayElement(titles),
-    address: '{location.lat}, {location.lng}',
+    address: `${location.lat}, ${location.lng}`,
 
     price: getRandomIntInclusive (10, 10000000),
     type: getRandomArrayElement(types),
