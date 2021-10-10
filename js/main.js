@@ -21,9 +21,6 @@ const getRandomFloat = function(min, max, precision) {
   }
 };
 
-//getRandomIntInclusive (20, 30);
-//getRandomFloat(10.3, 10.4, 5);
-
 //console.log(getRandomIntInclusive(20, 30));
 //console.log(getRandomFloat(10.3, 10.4, 5));
 
@@ -141,7 +138,7 @@ const createObject = () => ({
   location: getLocationList(),
   offer: {
     title: getRandomArrayElement(titles),
-    // address: String(this.location.lat) + ', ' + String(this.location.lng),
+    address: '{location.lat}, {location.lng}',
 
     price: getRandomIntInclusive (10, 10000000),
     type: getRandomArrayElement(types),
