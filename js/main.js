@@ -21,9 +21,6 @@ const getRandomFloat = function(min, max, precision) {
   }
 };
 
-//getRandomIntInclusive (20, 30);
-//getRandomFloat(10.3, 10.4, 5);
-
 //console.log(getRandomIntInclusive(20, 30));
 //console.log(getRandomFloat(10.3, 10.4, 5));
 
@@ -105,11 +102,16 @@ const featuresList = [
 const getRandomArrayElement = (elements) =>
   elements[getRandomIntInclusive(0, elements.length - 1)];
 
+function getRandomArrayElementWithDelete(elementsxxx) {
+  const indexElement= getRandomIntInclusive(0, elementsxxx.length - 1);
+  const elementReturn = elementsxxx[indexElement];
+  elementsxxx = elementsxxx.splice (indexElement, 1);
+  return elementReturn;
+}
 
 function getRandomArrayFromArray(sourceArray) {
 
-  const lengthOfArray = sourceArray.length;
-  const featuresCount = getRandomIntInclusive(1, lengthOfArray);
+  const featuresCount = getRandomIntInclusive(1, sourceArray.length);
   const array = [];
 
   for(let ind = 0; ind < featuresCount; ind++) {
@@ -123,38 +125,38 @@ function getRandomArrayFromArray(sourceArray) {
 }
 
 function getLocationList() {
-
-  const locationLAT = getRandomFloat (35.65000, 35.70000, 5);
-  const locationLNG = getRandomFloat (139.70000, 139.80000, 5);
-
   const locationList = {
-    lat: locationLAT,
-    lng: locationLNG,
+    lat: getRandomFloat (35.65000, 35.70000, 5),
+    lng: getRandomFloat (139.70000, 139.80000, 5),
   };
 
   return locationList;
 }
 
-const createObject = () => ({
 
-  author: getRandomArrayElement(avatars),
-  location: getLocationList(),
-  offer: {
-    title: getRandomArrayElement(titles),
-    // address: String(this.location.lat) + ', ' + String(this.location.lng),
+const createObject = () => {
+  const locationAddress = getLocationList();
 
-    price: getRandomIntInclusive (10, 10000000),
-    type: getRandomArrayElement(types),
-    rooms: getRandomIntInclusive (1, 100),
-    guests: getRandomIntInclusive (1, 10000),
-    checkin: getRandomArrayElement(checkins),
-    checkout: getRandomArrayElement(checkouts),
-    features: getRandomArrayFromArray(featuresList),
-    description: getRandomArrayElement(descriptions),
-    photos: getRandomArrayFromArray(photos),
-  },
+  return {
+    author: getRandomArrayElementWithDelete(avatars),
 
-});
+    offer: {
+      title: getRandomArrayElement(titles),
+      address: `${locationAddress.lat}, ${locationAddress.lng}`,
+
+      price: getRandomIntInclusive (10, 10000000),
+      type: getRandomArrayElement(types),
+      rooms: getRandomIntInclusive (1, 100),
+      guests: getRandomIntInclusive (1, 10000),
+      checkin: getRandomArrayElement(checkins),
+      checkout: getRandomArrayElement(checkouts),
+      features: getRandomArrayFromArray(featuresList),
+      description: getRandomArrayElement(descriptions),
+      photos: getRandomArrayFromArray(photos),
+    },
+    location: locationAddress,
+  };
+};
 
 const generateObjectsList = function (countCreateObject) {
   const objects = [];
