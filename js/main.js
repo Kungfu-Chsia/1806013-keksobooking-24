@@ -1,6 +1,4 @@
-import './data.js';
-import './util.js';
-import {createObject} from './data.js';
+import {createObject} from './utils.js';
 
 const generateObjectsList = function (countCreateObject) {
   const objects = [];
