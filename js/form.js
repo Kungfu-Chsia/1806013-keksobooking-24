@@ -1,3 +1,4 @@
+/***********Title*************/
 const adFormTitle = document.querySelector('.ad-form__title');
 const minTitleName = adFormTitle.minlength;
 const maxTitleName = adFormTitle.maxlength;
@@ -30,7 +31,7 @@ adFormTitle.addEventListener('input', () => {
   adFormTitle.reportValidity();
 });
 
-
+/***********Price*************/
 const adFormPrice = document.querySelector('.ad-form__price');
 
 adFormPrice.addEventListener('invalid', () => {
@@ -57,6 +58,7 @@ adFormPrice.addEventListener('input', () => {
   adFormPrice.reportValidity();
 });
 
+/***********Type*************/
 const adFormType = document.querySelector('.ad-form__type');
 
 adFormType.addEventListener('change', () => {
@@ -77,8 +79,46 @@ adFormType.addEventListener('change', () => {
 
   adFormPrice.placeholder=minPrice;
   adFormPrice.min=minPrice;
-  //console.log(adFormPrice);
 
+  if (adFormPrice.value < adFormPrice.min) {
+    adFormPrice.setCustomValidity(`Цена должна быть не меньше  ${ adFormPrice.min }`);
+  }else {
+    adFormPrice.setCustomValidity('');
+  }
+
+  adFormPrice.reportValidity();
   adFormType.reportValidity();
 });
 
+/***********Rooms*************/
+const adFormRooms = document.querySelector('.ad-form__rooms');
+const adFormCapacity = document.querySelector('.ad-form__capacity');
+
+adFormRooms.addEventListener('change', () => {
+  const currentValue = adFormRooms.value;
+
+  const optionCapacity = document.getElementById('capacity').getElementsByTagName('option');
+  for (let i = 0; i < optionCapacity.length; i++) {
+    optionCapacity[i].disabled = true;
+  }
+
+  if (currentValue === '100') {
+    optionCapacity[optionCapacity.length-1].disabled = false;
+  }else {
+    for (let ind = 0; ind < currentValue; ind++) {
+      optionCapacity[ind].disabled = false;
+    }
+  }
+
+  for (let i = 0; i < optionCapacity.length; i++) {
+    if (adFormCapacity[i].disabled && adFormCapacity[i].selected) {
+      adFormCapacity.setCustomValidity('Выбрано не корректное значение');
+    }else {
+      adFormCapacity.setCustomValidity('');
+    }
+  }
+
+  adFormCapacity.reportValidity();
+  //console.log(adFormCapacity);
+
+});

@@ -58,7 +58,7 @@ ObjectsList.forEach((Card) => {
   cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${Card.offer.checkin}, выезд до ${Card.offer.checkout}`;
   cardElement.querySelector('.popup__description').textContent = Card.offer.description;
 
-  //test
+  //test/
   //cardElement.querySelector('.popup__description').textContent = '';
   //const a= HiddenElement(cardElement,'.popup__description');
   if (cardElement.querySelector('.popup__description').textContent==='') {
@@ -68,14 +68,14 @@ ObjectsList.forEach((Card) => {
   }
 
 
-  //.popup__features
+  //.popup__features/
   const featuresList = Card.offer.features;
   featuresList.forEach((currentFeature) => {
     const nameFeature =`.popup__feature--${currentFeature}`;
     cardElement.querySelector(nameFeature).classList.remove('hidden');
   });
 
-  //.popup__photos
+  //.popup__photos/
   const photosList = Card.offer.photos;
   photosList.forEach((currentPhoto,index) => {
     const namePhoto =`.popup__photo--${index}`;
