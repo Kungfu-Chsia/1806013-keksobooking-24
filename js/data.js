@@ -58,7 +58,6 @@ const descriptions = [
   'Двухуровневые апартаменты',
   'Дом с 1 спальней',
   'Дом для отпуска',
-  '',
 ];
 
 const photos = [
@@ -102,4 +101,3 @@ const createObject = () => {
 };
 
 export {createObject};
-//export {avatars, titles, types, checkins, checkouts, descriptions, photos, featuresList};

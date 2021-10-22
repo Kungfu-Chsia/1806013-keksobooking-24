@@ -1,5 +1,3 @@
-//import {avatars, titles, types, checkins, checkouts, descriptions, photos, featuresList} from './data.js';
-
 const getRandomIntInclusive = function(min, max) {
   if (min === max) {
     return min;
