@@ -1,14 +1,5 @@
-import {createObject} from './utils.js';
+import './generate.js';
+import './form.js';
 
-const generateObjectsList = function (countCreateObject) {
-  const objects = [];
-
-  for (let ind = 0; ind < countCreateObject; ind++ ) {
-    objects.push(createObject());
-  }
-
-  return objects;
-};
-
-generateObjectsList (10);
-//console.log(createObject());
+import {setDocumentActiveOff} from './form.js';
+setDocumentActiveOff();

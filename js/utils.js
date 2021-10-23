@@ -1,4 +1,3 @@
-import {avatars, titles, types, checkins, checkouts, descriptions, photos, featuresList} from './data.js';
 const getRandomIntInclusive = function(min, max) {
   if (min === max) {
     return min;
@@ -31,7 +30,9 @@ const getRandomArrayElement = (elements) =>
 function getRandomArrayElementWithDelete(elementsxxx) {
   const indexElement= getRandomIntInclusive(0, elementsxxx.length - 1);
   const elementReturn = elementsxxx[indexElement];
-  elementsxxx = elementsxxx.splice (indexElement, 1);
+  if (elementsxxx.length > 1) {
+    elementsxxx = elementsxxx.splice (indexElement, 1);
+  }
   return elementReturn;
 }
 
@@ -40,7 +41,7 @@ function getRandomArrayFromArray(sourceArray) {
   const featuresCount = getRandomIntInclusive(1, sourceArray.length);
   const array = [];
 
-  for(let ind = 0; ind < featuresCount; ind++) {
+  for (let ind = 0; ind < featuresCount; ind++) {
     const el = getRandomArrayElement(sourceArray);
 
     if (!array.includes(el)) {
@@ -59,29 +60,4 @@ function getLocationList() {
   return locationList;
 }
 
-
-const createObject = () => {
-  const locationAddress = getLocationList();
-
-  return {
-    author: getRandomArrayElementWithDelete(avatars),
-
-    offer: {
-      title: getRandomArrayElement(titles),
-      address: `${locationAddress.lat}, ${locationAddress.lng}`,
-
-      price: getRandomIntInclusive (10, 10000000),
-      type: getRandomArrayElement(types),
-      rooms: getRandomIntInclusive (1, 100),
-      guests: getRandomIntInclusive (1, 10000),
-      checkin: getRandomArrayElement(checkins),
-      checkout: getRandomArrayElement(checkouts),
-      features: getRandomArrayFromArray(featuresList),
-      description: getRandomArrayElement(descriptions),
-      photos: getRandomArrayFromArray(photos),
-    },
-    location: locationAddress,
-  };
-};
-
-export {createObject};
+export {getRandomArrayElement, getRandomArrayElementWithDelete, getLocationList, getRandomArrayFromArray, getRandomIntInclusive};

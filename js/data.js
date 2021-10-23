@@ -1,3 +1,4 @@
+import {getRandomArrayElement, getRandomArrayElementWithDelete, getLocationList, getRandomArrayFromArray, getRandomIntInclusive} from './utils.js';
 
 const avatars = [
   'img/avatars/user01.png',
@@ -74,4 +75,29 @@ const featuresList = [
   'conditioner',
 ];
 
-export {avatars, titles, types, checkins, checkouts, descriptions, photos, featuresList};
+
+const createObject = () => {
+  const locationAddress = getLocationList();
+
+  return {
+    author: getRandomArrayElementWithDelete(avatars),
+
+    offer: {
+      title: getRandomArrayElement(titles),
+      address: `${locationAddress.lat}, ${locationAddress.lng}`,
+
+      price: getRandomIntInclusive (10, 30000),
+      type: getRandomArrayElement(types),
+      rooms: getRandomIntInclusive (1, 10),
+      guests: getRandomIntInclusive (1, 30),
+      checkin: getRandomArrayElement(checkins),
+      checkout: getRandomArrayElement(checkouts),
+      features: getRandomArrayFromArray(featuresList),
+      description: getRandomArrayElement(descriptions),
+      photos: getRandomArrayFromArray(photos),
+    },
+    location: locationAddress,
+  };
+};
+
+export {createObject};
