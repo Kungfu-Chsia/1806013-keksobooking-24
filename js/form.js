@@ -66,11 +66,11 @@ adFormPrice.addEventListener('input', () => {
 
 /***********Type*************/
 const houseCost = {
-  palace:   10000,
-  flat:     1000,
+  palace: 10000,
+  flat: 1000,
   bungalow: 0,
-  house:    5000,
-  hotel:    3000,
+  house: 5000,
+  hotel: 3000,
 };
 
 const adFormType = document.querySelector('.ad-form__type');
@@ -181,32 +181,32 @@ adForm.addEventListener('submit', () => {
   resetForm();
 });
 
-const setDisabled = function(linkForm, value, nameClass) {
-  if (value === true) {
-    linkForm.classList.add(nameClass);
+const toggleDisabledState = function(formElement, isDisabled, disabledClassName) {
+  if (isDisabled === true) {
+    formElement.classList.add(disabledClassName);
   } else{
-    linkForm.classList.remove(nameClass);
+    formElement.classList.remove(disabledClassName);
   }
 
-  const elements = linkForm.elements;
+  const elements = formElement.elements;
   for (let i = 0; i < elements.length; i++) {
-    elements[i].setAttribute('disabled', value);
+    elements[i].setAttribute('disabled', isDisabled);
   }
 };
 
 //функция установки активного состояния
 const setDocumentActiveOn = function () {
 
-  setDisabled(adForm,     false,  'ad-form--disabled');
-  setDisabled(mapFilters, false,  'map__filters--disabled');
+  toggleDisabledState(adForm, false, 'ad-form--disabled');
+  toggleDisabledState(mapFilters, false, 'map__filters--disabled');
 
 };
 
 //функция установки неактивного состояния
 const setDocumentActiveOff = function () {
 
-  setDisabled(adForm,     true,   'ad-form--disabled');
-  setDisabled(mapFilters, true,   'map__filters--disabled');
+  toggleDisabledState(adForm, true, 'ad-form--disabled');
+  toggleDisabledState(mapFilters, true, 'map__filters--disabled');
 
 //На месте карты отображается серый прямоугольник. ???
 };
