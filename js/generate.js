@@ -1,5 +1,6 @@
 import {createObject} from './data.js';
 
+const OBJECTS_COUNT = 10;
 const templateCard = document.querySelector('#card')
   .content
   .querySelector('.popup');
@@ -22,59 +23,58 @@ const houseTypes = {
   hotel: 'Отель',
 };
 
-const objectsList = generateObjectsList (10);
+const objectsList = generateObjectsList (OBJECTS_COUNT);
 const objectsListFragment = document.createDocumentFragment();
 
 const setupValueOrHideEmpty = function (element, nameProperty, value) {
 
-  element[nameProperty] = value;
-
-  if (value === '') {
-    element.classList.add('hidden');
-  } else {
+  if (value) {
+    element[nameProperty] = value;
     element.classList.remove('hidden');
+  } else {
+    element.classList.add('hidden');
   }
-  return 0;
 };
 
 objectsList.forEach((card) => {
 
   const cardElement = templateCard.cloneNode(true);
 
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__avatar'),        'src',          card.author);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__title'),         'textContent',  card.offer.title);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--address'), 'textContent',  card.offer.address);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--price'),   'textContent',  `${card.offer.price} ₽/ночь`);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__type'),          'textContent',  houseTypes[card.offer.type]);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--capacity'),'textContent',  `${card.offer.rooms} комнаты для ${card.offer.guests} гостей.`);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--time'),    'textContent',  `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__description'),   'textContent',  card.offer.description);
+  setupValueOrHideEmpty(cardElement.querySelector('.popup__avatar'), 'src', card.author);
+  setupValueOrHideEmpty(cardElement.querySelector('.popup__title'), 'textContent', card.offer.title);
+  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--address'), 'textContent', card.offer.address);
+  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--price'), 'textContent', `${card.offer.price} ₽/ночь`);
+  setupValueOrHideEmpty(cardElement.querySelector('.popup__type'), 'textContent', houseTypes[card.offer.type]);
+  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--capacity'),'textContent', `${card.offer.rooms} комнаты для ${card.offer.guests} гостей.`);
+  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--time'), 'textContent', `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`);
+  setupValueOrHideEmpty(cardElement.querySelector('.popup__description'), 'textContent', card.offer.description);
 
   //.popup__features/
-  cardElement.querySelector('.popup__features').classList.add('hidden');
-  const optionFeatures = cardElement.querySelectorAll('.popup__feature');
-  for (let i = 0; i < optionFeatures.length; i++) {
-    optionFeatures[i].classList.add('hidden');
+  const featuresList = card.offer.features;
+
+  if (featuresList.length === 0) {
+    cardElement.querySelectorAll('.popup__feature').classList.add('hidden');
   }
 
-  const featuresList = card.offer.features;
-  featuresList.forEach((currentFeature) => {
-    const nameFeature =`.popup__feature--${currentFeature}`;
-    cardElement.querySelector(nameFeature).classList.remove('hidden');
-    cardElement.querySelector('.popup__features').classList.remove('hidden');
+  //получаем html коллекцию элементов li из формы
+  const featuresListOnForm = cardElement.querySelector('.popup__features').getElementsByTagName('li');
+  const arrayFeaturesOnForm = [...featuresListOnForm]; //преобразуем в массив
+  arrayFeaturesOnForm.forEach((listItem) => {
+    const isFeatureActive = featuresList.some ((feature) => listItem.classList.contains(`popup__feature--${feature}`));
+    if (!isFeatureActive) {
+      listItem.style.display = 'none';}
   });
 
   //.popup__photos/
-  const allPhotosList = cardElement.querySelectorAll('.popup__photos');
-  for (let i = 0; i < allPhotosList.length; i++) {
-    allPhotosList[i].classList.add('hidden');
-  }
+  const photosListEl = cardElement.querySelector('div.popup__photos');
+  const photoEl = photosListEl.querySelector('img');
+  photosListEl.innerHTML = ''; // Удаляем все элементы внутри popup__photos
 
-  const photosList = card.offer.photos;
-  photosList.forEach((currentPhoto,index) => {
-    const namePhoto =`.popup__photo--${index}`;
-    setupValueOrHideEmpty( cardElement.querySelector(namePhoto), 'src', currentPhoto);
-    cardElement.querySelector(namePhoto).parentNode.classList.remove('hidden');
+  card.offer.photos.forEach((currentPhoto) => {
+    const clone = photoEl.cloneNode();
+
+    setupValueOrHideEmpty(clone, 'src', currentPhoto);
+    photosListEl.appendChild(clone);
   });
 
   objectsListFragment.appendChild(cardElement);
