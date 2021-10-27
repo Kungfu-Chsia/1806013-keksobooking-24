@@ -1,6 +1,6 @@
 import {createObject} from './data.js';
 
-const objectsCount = 10;
+const OBJECTS_COUNT = 10;
 const templateCard = document.querySelector('#card')
   .content
   .querySelector('.popup');
@@ -23,7 +23,7 @@ const houseTypes = {
   hotel: 'Отель',
 };
 
-const objectsList = generateObjectsList (objectsCount);
+const objectsList = generateObjectsList (OBJECTS_COUNT);
 const objectsListFragment = document.createDocumentFragment();
 
 const setupValueOrHideEmpty = function (element, nameProperty, value) {
@@ -60,7 +60,7 @@ objectsList.forEach((card) => {
   const featuresListOnForm = cardElement.querySelector('.popup__features').getElementsByTagName('li');
   const arrayFeaturesOnForm = [...featuresListOnForm]; //преобразуем в массив
   arrayFeaturesOnForm.forEach((listItem) => {
-    const isFeatureActive = card.offer.features.some ((feature) => listItem.classList.contains(`popup__feature--${feature}`));
+    const isFeatureActive = featuresList.some ((feature) => listItem.classList.contains(`popup__feature--${feature}`));
     if (!isFeatureActive) {
       listItem.style.display = 'none';}
   });

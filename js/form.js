@@ -97,6 +97,10 @@ adFormType.addEventListener('change', () => {
 const adFormRooms = document.querySelector('.ad-form__rooms');
 const adFormCapacity = document.querySelector('.ad-form__capacity');
 
+adFormCapacity.addEventListener('change', () => {
+  adFormCapacity.setCustomValidity('');
+});
+
 adFormRooms.addEventListener('change', () => {
   const currentValue = adFormRooms.value;
 
@@ -113,11 +117,10 @@ adFormRooms.addEventListener('change', () => {
     }
   }
 
+  adFormCapacity.setCustomValidity('');
   for (let i = 0; i < optionCapacity.length; i++) {
     if (adFormCapacity[i].disabled && adFormCapacity[i].selected) {
       adFormCapacity.setCustomValidity('Выбрано не корректное значение');
-    }else {
-      adFormCapacity.setCustomValidity('');
     }
   }
 
