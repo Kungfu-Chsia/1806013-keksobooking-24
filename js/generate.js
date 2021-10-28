@@ -1,20 +1,8 @@
-import {createObject} from './data.js';
+//import {createObject} from './data.js'; устарела
+import {createMarker} from './form.js';
 
-const OBJECTS_COUNT = 10;
-const templateCard = document.querySelector('#card')
-  .content
-  .querySelector('.popup');
-
-const generateObjectsList = function (countCreateObject) {
-  const objects = [];
-
-  for (let ind = 0; ind < countCreateObject; ind++ ) {
-    objects.push(createObject());
-  }
-
-  return objects;
-};
-
+const OBJECTS_COUNT = 10; //количество показываемых объектов
+const ALERT_SHOW_TIME=5000;
 const houseTypes = {
   palace: 'Дворец',
   flat: 'Квартира',
@@ -23,8 +11,79 @@ const houseTypes = {
   hotel: 'Отель',
 };
 
-const objectsList = generateObjectsList (OBJECTS_COUNT);
-const objectsListFragment = document.createDocumentFragment();
+//обработка события получения успех
+const onLoadSuccess = function (similarOblects) {
+
+  for (let ind = 0; ind < similarOblects.length; ind++ ) {
+    createMarker(similarOblects[ind]);
+  }
+};
+
+//обработка события получения ошибка
+const onLoadError = function (errorMessage) {
+
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = 100;
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = 0;
+  alertContainer.style.top = 0;
+  alertContainer.style.right = 0;
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
+
+  alertContainer.textContent = `Ошибка загрузки данных ${errorMessage}`;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+
+};
+
+
+//загрузка с сервера
+const loadObjectsListFromServer = function(countCreateObject) {
+  return fetch(
+    'https://24.javascript.pages.academy/keksobooking/data',
+    {
+      method: 'GET',
+      credentials: 'same-origin',
+    },
+  )
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+
+      throw new Error(`${response.status} ${response.statusText}`);
+    })
+    .then((data) => {
+      onLoadSuccess(data.slice(0, countCreateObject));
+    })
+    .catch((err) => {
+      onLoadError(err);
+    });
+};
+
+export {loadObjectsListFromServer};
+
+loadObjectsListFromServer(OBJECTS_COUNT);
+
+//устарела
+// const generateObjectsList = function (countCreateObject) {
+//   const objects = [];
+
+//   for (let ind = 0; ind < countCreateObject; ind++ ) {
+//     objects.push(createObject());
+//   }
+
+//   return objects;
+// };
+
+//export {generateObjectsList};
 
 const setupValueOrHideEmpty = function (element, nameProperty, value) {
 
@@ -36,11 +95,24 @@ const setupValueOrHideEmpty = function (element, nameProperty, value) {
   }
 };
 
-objectsList.forEach((card) => {
+//функция проверяет, что у входящего объекта есть массив в указанном свойстве
+const checkIncomingArray = function (IncomingArray) {
+  if (!IncomingArray) {
+    return [];
+  } else {
+    return IncomingArray;
+  }
+};
+
+
+const createCustomPopup = function (card){
+  const templateCard = document.querySelector('#card')
+    .content
+    .querySelector('.popup');
 
   const cardElement = templateCard.cloneNode(true);
 
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__avatar'), 'src', card.author);
+  setupValueOrHideEmpty(cardElement.querySelector('.popup__avatar'), 'src', card.author.avatar);
   setupValueOrHideEmpty(cardElement.querySelector('.popup__title'), 'textContent', card.offer.title);
   setupValueOrHideEmpty(cardElement.querySelector('.popup__text--address'), 'textContent', card.offer.address);
   setupValueOrHideEmpty(cardElement.querySelector('.popup__text--price'), 'textContent', `${card.offer.price} ₽/ночь`);
@@ -49,11 +121,12 @@ objectsList.forEach((card) => {
   setupValueOrHideEmpty(cardElement.querySelector('.popup__text--time'), 'textContent', `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`);
   setupValueOrHideEmpty(cardElement.querySelector('.popup__description'), 'textContent', card.offer.description);
 
-  //.popup__features/
-  const featuresList = card.offer.features;
+  const featuresList = checkIncomingArray(card.offer.features);
+  const photosList = checkIncomingArray(card.offer.photos);
 
+  //.popup__features/
   if (featuresList.length === 0) {
-    cardElement.querySelectorAll('.popup__feature').classList.add('hidden');
+    cardElement.querySelector('.popup__features').classList.add('hidden');
   }
 
   //получаем html коллекцию элементов li из формы
@@ -70,15 +143,15 @@ objectsList.forEach((card) => {
   const photoEl = photosListEl.querySelector('img');
   photosListEl.innerHTML = ''; // Удаляем все элементы внутри popup__photos
 
-  card.offer.photos.forEach((currentPhoto) => {
+  photosList.forEach((currentPhoto) => {
     const clone = photoEl.cloneNode();
 
     setupValueOrHideEmpty(clone, 'src', currentPhoto);
     photosListEl.appendChild(clone);
   });
 
-  objectsListFragment.appendChild(cardElement);
-});
+  return cardElement;
 
-const similarListElement = document.querySelector('.map__canvas');
-similarListElement.appendChild(objectsListFragment);
+};
+
+export {createCustomPopup};
