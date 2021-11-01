@@ -1,8 +1,4 @@
-//import {createObject} from './data.js'; устарела
-import {createMarker} from './form.js';
 
-const OBJECTS_COUNT = 10; //количество показываемых объектов
-const ALERT_SHOW_TIME=5000;
 const houseTypes = {
   palace: 'Дворец',
   flat: 'Квартира',
@@ -11,79 +7,15 @@ const houseTypes = {
   hotel: 'Отель',
 };
 
-//обработка события получения успех
-const onLoadSuccess = function (similarOblects) {
-
-  for (let ind = 0; ind < similarOblects.length; ind++ ) {
-    createMarker(similarOblects[ind]);
-  }
+const priceTypes = {
+  low: 10000,
+  high: 50000,
 };
 
-//обработка события получения ошибка
-const onLoadError = function (errorMessage) {
-
-  const alertContainer = document.createElement('div');
-  alertContainer.style.zIndex = 100;
-  alertContainer.style.position = 'absolute';
-  alertContainer.style.left = 0;
-  alertContainer.style.top = 0;
-  alertContainer.style.right = 0;
-  alertContainer.style.padding = '10px 3px';
-  alertContainer.style.fontSize = '30px';
-  alertContainer.style.textAlign = 'center';
-  alertContainer.style.backgroundColor = 'red';
-
-  alertContainer.textContent = `Ошибка загрузки данных ${errorMessage}`;
-
-  document.body.append(alertContainer);
-
-  setTimeout(() => {
-    alertContainer.remove();
-  }, ALERT_SHOW_TIME);
-
+const NODE_NAMES = {
+  INPUT:'INPUT',
+  SELECT:'SELECT',
 };
-
-
-//загрузка с сервера
-const loadObjectsListFromServer = function(countCreateObject) {
-  return fetch(
-    'https://24.javascript.pages.academy/keksobooking/data',
-    {
-      method: 'GET',
-      credentials: 'same-origin',
-    },
-  )
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-
-      throw new Error(`${response.status} ${response.statusText}`);
-    })
-    .then((data) => {
-      onLoadSuccess(data.slice(0, countCreateObject));
-    })
-    .catch((err) => {
-      onLoadError(err);
-    });
-};
-
-export {loadObjectsListFromServer};
-
-loadObjectsListFromServer(OBJECTS_COUNT);
-
-//устарела
-// const generateObjectsList = function (countCreateObject) {
-//   const objects = [];
-
-//   for (let ind = 0; ind < countCreateObject; ind++ ) {
-//     objects.push(createObject());
-//   }
-
-//   return objects;
-// };
-
-//export {generateObjectsList};
 
 const setupValueOrHideEmpty = function (element, nameProperty, value) {
 
@@ -97,13 +29,8 @@ const setupValueOrHideEmpty = function (element, nameProperty, value) {
 
 //функция проверяет, что у входящего объекта есть массив в указанном свойстве
 const checkIncomingArray = function (IncomingArray) {
-  if (!IncomingArray) {
-    return [];
-  } else {
-    return IncomingArray;
-  }
+  return IncomingArray || [];
 };
-
 
 const createCustomPopup = function (card){
   const templateCard = document.querySelector('#card')
@@ -151,7 +78,70 @@ const createCustomPopup = function (card){
   });
 
   return cardElement;
-
 };
 
+//поиск похожих объявлений в фильтре
+const getObjectdRank = (object) => {
+
+  const mapFilters = document.querySelector('.map__filters');
+  let rank = 0;
+
+  const elements = [...mapFilters.elements];
+  for (let i = 0; i < elements.length; i++) {
+    //если это селектор
+    if (elements[i].nodeName === NODE_NAMES.SELECT){
+      const optionList = elements[i].getElementsByTagName('option');
+      for (let indexOption = 0; indexOption < optionList.length; indexOption++) {
+        if (optionList[indexOption].selected) {
+
+          //определяем свойство
+          if (elements[i].name === 'housing-type' && optionList[indexOption].value !== 'any') {
+            if (object.offer.type === optionList[indexOption].value) {
+              rank += 10;}
+          }
+
+          if (elements[i].name === 'housing-price' && optionList[indexOption].value !== 'any') {
+            if (object.offer.price >= priceTypes['high'] && optionList[indexOption].value === 'high') {
+              rank += 7;
+            } else if (object.offer.price <= priceTypes['low'] && optionList[indexOption].value === 'low'){
+              rank += 7;
+            } else if (object.offer.price >= priceTypes['low'] && object.offer.price <= priceTypes['high'] && optionList[indexOption].value === 'middle'){
+              rank += 7;}
+
+          }
+          if (elements[i].name === 'housing-rooms' && optionList[indexOption].value !== 'any') {
+            if (object.offer.rooms === optionList[indexOption].value) {
+              rank += 9;
+            }
+          }
+
+          if (elements[i].name === 'housing-guests' && optionList[indexOption].value !== 'any') {
+            if (object.offer.guests === optionList[indexOption].value) {
+              rank += 9;
+            }
+          }
+        }
+      }
+      //если это фичи
+      if(elements[i].nodeName === NODE_NAMES.INPUT){
+        if (elements[i].checked) {
+          if (object.offer.features.some(elements[i].value)) {
+            rank += 1;
+          }
+        }
+      }
+    }
+  }
+
+  return rank;
+};
+
+const compareObjects = (objectA, objectB) => {
+  const rankA = getObjectdRank(objectA);
+  const rankB = getObjectdRank(objectB);
+
+  return rankB - rankA;
+};
+
+export {compareObjects};
 export {createCustomPopup};
