@@ -1,10 +1,11 @@
 import {createMarker} from './map.js';
-import {compareObjects} from './generate.js';
+//import {compareObjects} from './generate.js';
+import {applyFilter} from './generate.js';
 import {resetForm} from './form.js';
 import {toggleDisabledState} from './form.js';
 
 const ALERT_SHOW_TIME = 5000;
-const AD_FORM = document.querySelector('.ad-form');
+//const AD_FORM = document.querySelector('.ad-form');
 
 
 const API_URL = 'https://24.javascript.pages.academy/keksobooking';
@@ -33,7 +34,7 @@ const onSubmitError = function () {
 
 
 //отправка данных формы на сервер
-const sendDataToServer = function () {
+const sendDataToServer = function (AD_FORM) {
   const formData = new FormData(AD_FORM);
 
   fetch(
@@ -50,9 +51,7 @@ const sendDataToServer = function () {
       else {
         onSubmitError();
       }})
-    .catch(() => {
-      onSubmitError();
-    });
+    .catch(onSubmitError);
 };
 
 
@@ -88,6 +87,13 @@ const onLoadError = function (errorMessage) {
   }, ALERT_SHOW_TIME);
 };
 
+//фильтруем полученные с сервера данные.
+//Возвращаем указанное количество отфильтрованных
+const getFilteredData = function(data,countCreateObject) {
+  return data
+    .filter(applyFilter)
+    .slice(0, countCreateObject);
+};
 
 //загрузка с сервера
 const loadObjectsListFromServer = function(countCreateObject) {
@@ -105,15 +111,17 @@ const loadObjectsListFromServer = function(countCreateObject) {
       throw new Error(`${response.status} ${response.statusText}`);
     })
     .then((data) => {
-      onLoadSuccess(data
-        .slice()
-        .sort(compareObjects)
-        .slice(0, countCreateObject));
+      //БЫЛО
+      // onLoadSuccess(data
+      //   .slice()
+      //   .sort(compareObjects)
+      //   .slice(0, countCreateObject));
+      //СТАЛО
+      onLoadSuccess(getFilteredData(data,countCreateObject));
     })
-    .catch((err) => {
-      onLoadError(err);
-    });
+    .catch(onLoadError);
 };
+
 
 export {sendDataToServer};
 export {loadObjectsListFromServer};

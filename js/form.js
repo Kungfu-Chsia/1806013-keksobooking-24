@@ -22,8 +22,21 @@ const HOUSE_COST = {
   hotel: 3000,
 };
 
-/***********Title*************/
+//селекторы
 const adFormTitle = document.querySelector('.ad-form__title');
+const adFormPrice = document.querySelector('.ad-form__price');
+const adFormType = document.querySelector('.ad-form__type');
+const adFormRooms = document.querySelector('.ad-form__rooms');
+const adFormCapacity = document.querySelector('.ad-form__capacity');
+const adFormTimein = document.querySelector('.ad-form__timein');
+const adFormTimeout = document.querySelector('.ad-form__timeout');
+const adForm = document.querySelector('.ad-form');
+const mapFilters = document.querySelector('.map__filters');
+const adFormPreview = document.querySelector('.ad-form-header__preview');
+const successForm = document.querySelector('.success');
+const errorForm =document.querySelector('.error');
+
+/***********Title*************/
 const minTitleName = adFormTitle.getAttribute('minlength');
 const maxTitleName = adFormTitle.getAttribute('maxlength');
 
@@ -56,8 +69,6 @@ adFormTitle.addEventListener('input', () => {
 
 
 /***********Price*************/
-const adFormPrice = document.querySelector('.ad-form__price');
-
 adFormPrice.addEventListener('invalid', () => {
 
   if (adFormPrice.validity.rangeOverflow) {
@@ -65,8 +76,6 @@ adFormPrice.addEventListener('invalid', () => {
   } else {
     adFormPrice.setCustomValidity('');
   }
-
-  //adFormPrice.reportValidity();
 });
 
 adFormPrice.addEventListener('input', () => {
@@ -85,8 +94,6 @@ adFormPrice.addEventListener('input', () => {
 
 
 /***********Type*************/
-const adFormType = document.querySelector('.ad-form__type');
-
 const checkPrice = function() {
 
   const minPrice = HOUSE_COST[adFormType.value];
@@ -104,19 +111,11 @@ const checkPrice = function() {
   adFormPrice.reportValidity();
 };
 
-adFormType.addEventListener('change', () => {
-  checkPrice();
-});
-
-adFormPrice.addEventListener('change', () => {
-  checkPrice();
-});
+adFormType.addEventListener('change', checkPrice);
+adFormPrice.addEventListener('change', checkPrice);
 
 
 /***********Rooms*************/
-const adFormRooms = document.querySelector('.ad-form__rooms');
-const adFormCapacity = document.querySelector('.ad-form__capacity');
-
 adFormCapacity.addEventListener('change', () => {
   adFormCapacity.setCustomValidity('');
 });
@@ -149,9 +148,6 @@ adFormRooms.addEventListener('change', () => {
 
 
 /***********Time*************/
-const adFormTimein = document.querySelector('.ad-form__timein');
-const adFormTimeout = document.querySelector('.ad-form__timeout');
-
 adFormTimein.addEventListener('change', () => {
   const currentValue = adFormTimein.value;
 
@@ -180,7 +176,6 @@ document.getElementById('address').setAttribute('readonly', true);
 const inputAvatar = document.getElementById('avatar');
 inputAvatar.setAttribute('accept', 'image/png, image/jpeg');
 inputAvatar.addEventListener('change', () => {
-  const adFormPreview = document.querySelector('.ad-form-header__preview');
   for (let i = 0; i < adFormPreview.childNodes.length; i++) {
     if (adFormPreview.childNodes[i].nodeName === NODE_NAMES.IMG) {
       adFormPreview.childNodes[i].setAttribute('src',URL.createObjectURL(inputAvatar.files[0]));
@@ -200,9 +195,6 @@ inputImage.addEventListener('change', () => {
 
 
 /***********Active*************/
-const adForm = document.querySelector('.ad-form');
-const mapFilters = document.querySelector('.map__filters');
-
 const toggleDisabledState = function(formElement, isDisabled, disabledClassName) {
   if (isDisabled === true) {
     formElement.classList.add(disabledClassName);
@@ -261,15 +253,12 @@ const resetForm = function () {
 
 
 //событие сброса формы отправления
-adForm.addEventListener('reset', () => {
-  //evt.preventDefault();
-  resetForm();
-});
+adForm.addEventListener('reset', resetForm);
 
 //отлов события отправки формы
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  sendDataToServer();
+  sendDataToServer(adForm);
 });
 
 const createFormSuccessError = function () {
@@ -278,17 +267,17 @@ const createFormSuccessError = function () {
     .content
     .querySelector('.success');
 
-  const successForm = successFormTemplate.cloneNode(true);
-  document.body.appendChild(successForm);
-  successForm.classList.add('hidden');
+  const successFormCreated = successFormTemplate.cloneNode(true);
+  document.body.appendChild(successFormCreated);
+  successFormCreated.classList.add('hidden');
 
   const errorFormTemplate = document.querySelector('#error')
     .content
     .querySelector('.error');
 
-  const errorForm = errorFormTemplate.cloneNode(true);
-  document.body.appendChild(errorForm);
-  errorForm.classList.add('hidden');
+  const errorFormCreated = errorFormTemplate.cloneNode(true);
+  document.body.appendChild(errorFormCreated);
+  errorFormCreated.classList.add('hidden');
 };
 
 const hideModalForm = function (modalForm,classHide) {
@@ -299,14 +288,14 @@ const hideModalForm = function (modalForm,classHide) {
 document.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape') {
     evt.preventDefault();
-    hideModalForm(document.querySelector('.success'),'hidden');
-    hideModalForm(document.querySelector('.error'),'hidden');
+    hideModalForm(successForm,'hidden');
+    hideModalForm(errorForm,'hidden');
   }
 });
 
 document.addEventListener('click', () => {
-  hideModalForm(document.querySelector('.success'),'hidden');
-  hideModalForm(document.querySelector('.error'),'hidden');
+  hideModalForm(successForm,'hidden');
+  hideModalForm(errorForm,'hidden');
 });
 
 
@@ -316,3 +305,4 @@ setDocumentActiveOff();
 export {setDocumentActiveOn};
 export {resetForm};
 export {toggleDisabledState};
+export {mapFilters};
