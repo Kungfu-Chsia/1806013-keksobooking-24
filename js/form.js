@@ -1,10 +1,31 @@
-/***********Title*************/
+import './map.js';
+import {deleteMarker} from './map.js';
+import {sendDataToServer} from './callserver.js';
+import {loadObjectsListFromServer} from './callserver.js';
+import {NodeNames} from './vocab.js';
+import {HouseCost} from './vocab.js';
+import {ID_PALACE} from './vocab.js';
+import {PREVIEW_HEIGHT} from './vocab.js';
+import {PREVIEW_WIDTH} from './vocab.js';
+import {OBJECTS_COUNT} from './vocab.js';
+
+//селекторы
 const adFormTitle = document.querySelector('.ad-form__title');
-// const minTitleName = adFormTitle.minLength;
-// const maxTitleName = adFormTitle.maxLength;
+const adFormPrice = document.querySelector('.ad-form__price');
+const adFormType = document.querySelector('.ad-form__type');
+const adFormRooms = document.querySelector('.ad-form__rooms');
+const adFormCapacity = document.querySelector('.ad-form__capacity');
+const adFormTimein = document.querySelector('.ad-form__timein');
+const adFormTimeout = document.querySelector('.ad-form__timeout');
+const adForm = document.querySelector('.ad-form');
+const mapFilters = document.querySelector('.map__filters');
+const adFormPreview = document.querySelector('.ad-form-header__preview');
+const successForm = document.querySelector('.success');
+const errorForm =document.querySelector('.error');
+
+/***********Title*************/
 const minTitleName = adFormTitle.getAttribute('minlength');
 const maxTitleName = adFormTitle.getAttribute('maxlength');
-const idPalace = '100';
 
 adFormTitle.addEventListener('invalid', () => {
 
@@ -17,7 +38,6 @@ adFormTitle.addEventListener('invalid', () => {
   } else {
     adFormTitle.setCustomValidity('');
   }
-  adFormTitle.reportValidity();
 });
 
 adFormTitle.addEventListener('input', () => {
@@ -36,8 +56,6 @@ adFormTitle.addEventListener('input', () => {
 
 
 /***********Price*************/
-const adFormPrice = document.querySelector('.ad-form__price');
-
 adFormPrice.addEventListener('invalid', () => {
 
   if (adFormPrice.validity.rangeOverflow) {
@@ -45,8 +63,6 @@ adFormPrice.addEventListener('invalid', () => {
   } else {
     adFormPrice.setCustomValidity('');
   }
-
-  adFormPrice.reportValidity();
 });
 
 adFormPrice.addEventListener('input', () => {
@@ -65,38 +81,28 @@ adFormPrice.addEventListener('input', () => {
 
 
 /***********Type*************/
-const houseCost = {
-  palace: 10000,
-  flat: 1000,
-  bungalow: 0,
-  house: 5000,
-  hotel: 3000,
-};
+const checkPrice = function() {
 
-const adFormType = document.querySelector('.ad-form__type');
-
-adFormType.addEventListener('change', () => {
-  const currentValue = adFormType.value;
-  const minPrice = houseCost[currentValue];
+  const minPrice = HouseCost[adFormType.value];
 
   adFormPrice.setAttribute('placeholder', minPrice);
   adFormPrice.setAttribute('min', minPrice);
 
-  if (adFormPrice.value < adFormPrice.min) {
+  if (adFormPrice.value > 0 && adFormPrice.value < adFormPrice.min) {
     adFormPrice.setCustomValidity(`Цена должна быть не меньше  ${ adFormPrice.min }`);
-  }else {
+  }
+  else {
     adFormPrice.setCustomValidity('');
   }
 
   adFormPrice.reportValidity();
-  adFormType.reportValidity();
-});
+};
+
+adFormType.addEventListener('change', checkPrice);
+adFormPrice.addEventListener('change', checkPrice);
 
 
 /***********Rooms*************/
-const adFormRooms = document.querySelector('.ad-form__rooms');
-const adFormCapacity = document.querySelector('.ad-form__capacity');
-
 adFormCapacity.addEventListener('change', () => {
   adFormCapacity.setCustomValidity('');
 });
@@ -109,7 +115,7 @@ adFormRooms.addEventListener('change', () => {
     optionCapacity[i].disabled = true;
   }
 
-  if (currentValue === idPalace) {
+  if (currentValue === ID_PALACE) {
     optionCapacity[optionCapacity.length-1].disabled = false;
   }else {
     for (let ind = 0; ind < currentValue; ind++) {
@@ -129,9 +135,6 @@ adFormRooms.addEventListener('change', () => {
 
 
 /***********Time*************/
-const adFormTimein = document.querySelector('.ad-form__timein');
-const adFormTimeout = document.querySelector('.ad-form__timeout');
-
 adFormTimein.addEventListener('change', () => {
   const currentValue = adFormTimein.value;
 
@@ -157,12 +160,66 @@ adFormTimeout.addEventListener('change', () => {
 document.getElementById('address').setAttribute('readonly', true);
 
 /***********Foto*************/
-document.getElementById('avatar').setAttribute('accept', 'image/png, image/jpeg');
-document.getElementById('images').setAttribute('accept', 'image/png, image/jpeg');
+const inputAvatar = document.getElementById('avatar');
+inputAvatar.setAttribute('accept', 'image/png, image/jpeg');
+inputAvatar.addEventListener('change', () => {
+  for (let i = 0; i < adFormPreview.childNodes.length; i++) {
+    if (adFormPreview.childNodes[i].nodeName === NodeNames.IMG) {
+      adFormPreview.childNodes[i].setAttribute('src',URL.createObjectURL(inputAvatar.files[0]));
+    }
+  }
+});
+
+const inputImage = document.getElementById('images');
+inputImage.setAttribute('accept', 'image/png, image/jpeg');
+inputImage.addEventListener('change', () => {
+  const elem = document.createElement('img');
+  elem.setAttribute('src', URL.createObjectURL(inputImage.files[0]));
+  elem.setAttribute('height', PREVIEW_HEIGHT);
+  elem.setAttribute('width', PREVIEW_WIDTH);
+  document.querySelector('.ad-form__photo').appendChild(elem);
+});
+
 
 /***********Active*************/
-const adForm = document.querySelector('.ad-form');
-const mapFilters = document.querySelector('.map__filters');
+const toggleDisabledState = function(formElement, isDisabled, disabledClassName) {
+  if (isDisabled === true) {
+    formElement.classList.add(disabledClassName);
+  }
+  else {
+    formElement.classList.remove(disabledClassName);
+  }
+
+  const elements = formElement.elements;
+  for (let i = 0; i < elements.length; i++) {
+    //elements[i].setAttribute('disabled', isDisabled); // через setAttribute нельзя снять свойство disabled
+    elements[i].disabled = isDisabled;
+  }
+};
+
+//функция установки активного состояния
+const setDocumentActiveOn = function () {
+  toggleDisabledState(adForm, false, 'ad-form--disabled');
+  loadObjectsListFromServer(OBJECTS_COUNT);
+};
+
+//функция установки неактивного состояния
+const setDocumentActiveOff = function () {
+  toggleDisabledState(adForm, true, 'ad-form--disabled');
+  toggleDisabledState(mapFilters, true, 'map__filters--disabled');
+};
+
+
+/***********Filter*************/
+const applyFilterOnForm = function () {
+  deleteMarker();
+  loadObjectsListFromServer(OBJECTS_COUNT);
+};
+
+mapFilters.addEventListener('change', () => {
+  applyFilterOnForm();
+});
+
 
 //процедура сброса данных формы, фильтров, карты и т.д.
 const resetForm = function () {
@@ -171,48 +228,69 @@ const resetForm = function () {
   // метка адреса возвращается в исходное положение;
   // значение поля адреса корректируется соответственно исходному положению метки;
   // если на карте был показан балун, то он должен быть скрыт.
-  //console.log('reset');
+  adForm.reset();
+  mapFilters.reset();
+  inputImage.setAttribute('src', ' ');
+  //очистка слоя меток
+  deleteMarker();
+
+  toggleDisabledState(mapFilters, true, 'map__filters--disabled');
+  loadObjectsListFromServer(OBJECTS_COUNT);
+
 };
+
 
 //событие сброса формы отправления
-adForm.addEventListener('reset', () => {
-  resetForm();
+adForm.addEventListener('reset', resetForm);
+
+//отлов события отправки формы
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  sendDataToServer(adForm);
 });
 
-//событие подтверждения формы отправления
-adForm.addEventListener('submit', () => {
-  resetForm();
+const createFormSuccessError = function () {
+
+  const successFormTemplate = document.querySelector('#success')
+    .content
+    .querySelector('.success');
+
+  const successFormCreated = successFormTemplate.cloneNode(true);
+  document.body.appendChild(successFormCreated);
+  successFormCreated.classList.add('hidden');
+
+  const errorFormTemplate = document.querySelector('#error')
+    .content
+    .querySelector('.error');
+
+  const errorFormCreated = errorFormTemplate.cloneNode(true);
+  document.body.appendChild(errorFormCreated);
+  errorFormCreated.classList.add('hidden');
+};
+
+const hideModalForm = function (modalForm,classHide) {
+  if (modalForm !== null && !modalForm.classList.contains(classHide)) {
+    modalForm.classList.add(classHide);}
+};
+
+document.addEventListener('keydown', (evt) => {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    hideModalForm(successForm,'hidden');
+    hideModalForm(errorForm,'hidden');
+  }
 });
 
-const toggleDisabledState = function(formElement, isDisabled, disabledClassName) {
-  if (isDisabled === true) {
-    formElement.classList.add(disabledClassName);
-  } else{
-    formElement.classList.remove(disabledClassName);
-  }
+document.addEventListener('click', () => {
+  hideModalForm(successForm,'hidden');
+  hideModalForm(errorForm,'hidden');
+});
 
-  const elements = formElement.elements;
-  for (let i = 0; i < elements.length; i++) {
-    elements[i].setAttribute('disabled', isDisabled);
-  }
-};
 
-//функция установки активного состояния
-const setDocumentActiveOn = function () {
-
-  toggleDisabledState(adForm, false, 'ad-form--disabled');
-  toggleDisabledState(mapFilters, false, 'map__filters--disabled');
-
-};
-
-//функция установки неактивного состояния
-const setDocumentActiveOff = function () {
-
-  toggleDisabledState(adForm, true, 'ad-form--disabled');
-  toggleDisabledState(mapFilters, true, 'map__filters--disabled');
-
-//На месте карты отображается серый прямоугольник. ???
-};
+createFormSuccessError();
+setDocumentActiveOff();
 
 export {setDocumentActiveOn};
-export {setDocumentActiveOff};
+export {resetForm};
+export {toggleDisabledState};
+export {mapFilters};
