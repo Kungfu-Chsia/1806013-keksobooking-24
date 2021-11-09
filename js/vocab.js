@@ -1,4 +1,4 @@
-const NODE_NAMES = {
+const NodeNames = {
   IMG:'IMG',
   INPUT:'INPUT',
   SELECT:'SELECT',
@@ -66,7 +66,7 @@ const priceTypes = {
   [PriceFilterValues.HIGH]: 50000,
 };
 
-const HOUSE_COST = {
+const HouseCost = {
   palace: 10000,
   flat: 1000,
   bungalow: 0,
@@ -92,7 +92,7 @@ const START_LAT = 35.6895;
 const START_LNG = 139.692;
 const PRECISION = 5;
 
-export {NODE_NAMES};
+export {NodeNames};
 export {FilterNames};
 export {TypeFilterValues};
 export {houseTypes};
@@ -101,7 +101,7 @@ export {FeatureFilterValues};
 export {RoomsFilterValues};
 export {GuestsFilterValues};
 export {priceTypes};
-export {HOUSE_COST};
+export {HouseCost};
 export {ID_PALACE};
 export {PREVIEW_HEIGHT};
 export {PREVIEW_WIDTH};

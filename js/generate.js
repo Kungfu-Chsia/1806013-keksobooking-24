@@ -1,5 +1,5 @@
 import {mapFilters} from './form.js';
-import {NODE_NAMES} from './vocab.js';
+import {NodeNames} from './vocab.js';
 import {FilterNames} from './vocab.js';
 import {TypeFilterValues} from './vocab.js';
 import {houseTypes} from './vocab.js';
@@ -29,8 +29,8 @@ const setupValueOrHideEmpty = function (element, nameProperty, value) {
 };
 
 //функция проверяет, что у входящего объекта есть массив в указанном свойстве
-const checkIncomingArray = function (IncomingArray) {
-  return IncomingArray || [];
+const checkIncomingArray = function (incomingArray) {
+  return incomingArray || [];
 };
 
 const createCustomPopup = function (card){
@@ -162,11 +162,11 @@ const applyFilter = (adObject) => {
   //если хоть один из фильтров ответит false, то показа не будет
   const formElements = [...mapFilters.elements];
   formElements.forEach((formElement) => {
-    if (allow && formElement.nodeName === NODE_NAMES.SELECT) {
+    if (allow && formElement.nodeName === NodeNames.SELECT) {
       allow =  getAllowFromSelect(adObject, formElement,allow) && allow; //логическое И. Если хоть один false - то вся кострукция false
     }
 
-    if (allow && formElement.nodeName === NODE_NAMES.INPUT){
+    if (allow && formElement.nodeName === NodeNames.INPUT){
       allow = getAllowFromCheckboxes(adObject, formElement) && allow;
     }
   });

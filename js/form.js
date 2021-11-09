@@ -2,8 +2,8 @@ import './map.js';
 import {deleteMarker} from './map.js';
 import {sendDataToServer} from './callserver.js';
 import {loadObjectsListFromServer} from './callserver.js';
-import {NODE_NAMES} from './vocab.js';
-import {HOUSE_COST} from './vocab.js';
+import {NodeNames} from './vocab.js';
+import {HouseCost} from './vocab.js';
 import {ID_PALACE} from './vocab.js';
 import {PREVIEW_HEIGHT} from './vocab.js';
 import {PREVIEW_WIDTH} from './vocab.js';
@@ -83,7 +83,7 @@ adFormPrice.addEventListener('input', () => {
 /***********Type*************/
 const checkPrice = function() {
 
-  const minPrice = HOUSE_COST[adFormType.value];
+  const minPrice = HouseCost[adFormType.value];
 
   adFormPrice.setAttribute('placeholder', minPrice);
   adFormPrice.setAttribute('min', minPrice);
@@ -164,7 +164,7 @@ const inputAvatar = document.getElementById('avatar');
 inputAvatar.setAttribute('accept', 'image/png, image/jpeg');
 inputAvatar.addEventListener('change', () => {
   for (let i = 0; i < adFormPreview.childNodes.length; i++) {
-    if (adFormPreview.childNodes[i].nodeName === NODE_NAMES.IMG) {
+    if (adFormPreview.childNodes[i].nodeName === NodeNames.IMG) {
       adFormPreview.childNodes[i].setAttribute('src',URL.createObjectURL(inputAvatar.files[0]));
     }
   }
