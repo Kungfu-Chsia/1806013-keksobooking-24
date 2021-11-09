@@ -1,66 +1,14 @@
 import {mapFilters} from './form.js';
+import {NODE_NAMES} from './vocab.js';
+import {FilterNames} from './vocab.js';
+import {TypeFilterValues} from './vocab.js';
+import {houseTypes} from './vocab.js';
+import {PriceFilterValues} from './vocab.js';
+import {FeatureFilterValues} from './vocab.js';
+import {RoomsFilterValues} from './vocab.js';
+import {GuestsFilterValues} from './vocab.js';
+import {priceTypes} from './vocab.js';
 
-const NODE_NAMES = {
-  IMG:'IMG',
-  INPUT:'INPUT',
-  SELECT:'SELECT',
-};
-
-const FilterNames = {
-  TYPE: 'housing-type',
-  PRICE: 'housing-price',
-  ROOMS: 'housing-rooms',
-  GUESTS: 'housing-guests',
-  FEATURES: 'features',
-};
-
-const TypeFilterValues = {
-  ANY: 'any',
-  BUNGALOW: 'bungalow',
-  PALACE: 'palace',
-  FLAT: 'flat',
-  HOTEL: 'hotel',
-  HOUSE: 'house',
-};
-
-const houseTypes = {
-  [TypeFilterValues.ANY]: 'any',
-  [TypeFilterValues.PALACE]: 'Дворец',
-  [TypeFilterValues.FLAT]: 'Квартира',
-  [TypeFilterValues.BUNGALOW]: 'Бунгало',
-  [TypeFilterValues.HOUSE]: 'Дом',
-  [TypeFilterValues.HOTEL]: 'Отель',
-};
-
-const PriceFilterValues = {
-  ANY: 'any',
-  LOW: 'low',
-  MIDDLE: 'middle',
-  HIGH: 'high',
-};
-
-const FeatureFilterValues = {
-  WIFI: 'wifi',
-  DISHWASHER: 'dishwasher',
-  PARKING: 'parking',
-  WASHER: 'washer',
-  ELEVATOR: 'elevator',
-  CONDITIONER: 'conditioner',
-};
-
-const RoomsFilterValues = {
-  ANY: 'any',
-  ONE: '1',
-  TWO: '2',
-  THREE: '3',
-};
-
-const GuestsFilterValues = {
-  ANY: 'any',
-  ONE: '1',
-  TWO: '2',
-  NOT_FOR_GUESTS: '0',
-};
 
 const FilterValuesByName = {
   [FilterNames.TYPE]: TypeFilterValues,
@@ -69,23 +17,6 @@ const FilterValuesByName = {
   [FilterNames.ROOMS]: RoomsFilterValues,
   [FilterNames.FEATURES]: FeatureFilterValues,
 };
-
-const priceTypes = {
-  [PriceFilterValues.LOW]: 10000,
-  [PriceFilterValues.HIGH]: 50000,
-};
-
-//больше не требуется считать рейтинг
-// const AdRanksByFilterType = {
-//   [FilterNames.TYPE]: 10,
-//   [FilterNames.PRICE]: 7,
-//   [FilterNames.ROOMS]: 9,
-//   [FilterNames.GUESTS]: 9,
-//   [FilterNames.FEATURES]: 1,
-// };
-
-//можно убрать - сделали импорт из data.js
-//const mapFilters = document.querySelector('.map__filters');
 
 const setupValueOrHideEmpty = function (element, nameProperty, value) {
 
@@ -223,37 +154,6 @@ const getAllowFromCheckboxes = ((adObject, checkboxEl) => {
 
 });
 
-
-//больше не используется
-//поиск похожих объявлений в фильтре
-// const getObjectRank = (adObject) => {
-//   //let rank = 0;
-//   let rank = false;
-
-//   const formElements = [...mapFilters.elements];
-//   formElements.forEach((formElement) => {
-//     if (formElement.nodeName === NODE_NAMES.SELECT) {
-//       //rank += getRankFromSelect(adObject, formElement);
-//       rank = getRankFromSelect(adObject, formElement,rank) || rank;
-//     }
-
-//     if (formElement.nodeName === NODE_NAMES.INPUT){
-//       //rank += getRankFromCheckboxes(adObject, formElement);
-//       rank =getRankFromCheckboxes(adObject, formElement) || rank ;
-//     }
-//   });
-
-//   return rank;
-// };
-
-//больше не используется
-// const compareObjects = (objectA, objectB) => {
-//   const rankA = getObjectRank(objectA);
-//   const rankB = getObjectRank(objectB);
-//   //debugger;
-//   return rankB - rankA;
-// };
-
 //определяет для каждого объекта нужно его выводить или нет (применяет фильтр)
 const applyFilter = (adObject) => {
 
@@ -273,6 +173,5 @@ const applyFilter = (adObject) => {
   return allow;
 };
 
-//export {compareObjects};
 export {createCustomPopup};
 export {applyFilter};

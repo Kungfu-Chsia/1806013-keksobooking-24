@@ -2,25 +2,12 @@ import './map.js';
 import {deleteMarker} from './map.js';
 import {sendDataToServer} from './callserver.js';
 import {loadObjectsListFromServer} from './callserver.js';
-
-const ID_PALACE = '100';
-const PREVIEW_HEIGHT = 70;
-const PREVIEW_WIDTH = 70;
-const OBJECTS_COUNT = 10; //количество показываемых объектов
-
-const NODE_NAMES = {
-  IMG:'IMG',
-  INPUT:'INPUT',
-  SELECT:'SELECT',
-};
-
-const HOUSE_COST = {
-  palace: 10000,
-  flat: 1000,
-  bungalow: 0,
-  house: 5000,
-  hotel: 3000,
-};
+import {NODE_NAMES} from './vocab.js';
+import {HOUSE_COST} from './vocab.js';
+import {ID_PALACE} from './vocab.js';
+import {PREVIEW_HEIGHT} from './vocab.js';
+import {PREVIEW_WIDTH} from './vocab.js';
+import {OBJECTS_COUNT} from './vocab.js';
 
 //селекторы
 const adFormTitle = document.querySelector('.ad-form__title');
@@ -243,6 +230,7 @@ const resetForm = function () {
   // если на карте был показан балун, то он должен быть скрыт.
   adForm.reset();
   mapFilters.reset();
+  inputImage.setAttribute('src', ' ');
   //очистка слоя меток
   deleteMarker();
 
@@ -281,7 +269,7 @@ const createFormSuccessError = function () {
 };
 
 const hideModalForm = function (modalForm,classHide) {
-  if (!modalForm.classList.contains(classHide)) {
+  if (modalForm !== null && !modalForm.classList.contains(classHide)) {
     modalForm.classList.add(classHide);}
 };
 

@@ -1,9 +1,9 @@
 import {setDocumentActiveOn} from './form.js';
 import {createCustomPopup} from './generate.js';
+import {START_LAT} from './vocab.js';
+import {START_LNG} from './vocab.js';
+import {PRECISION} from './vocab.js';
 
-const START_LAT = 35.6895;
-const START_LNG = 139.692;
-const PRECISION = 5;
 
 /***********MAP*************/
 const map = L.map('map-canvas')

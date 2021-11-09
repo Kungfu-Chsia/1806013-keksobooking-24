@@ -3,16 +3,8 @@ import {createMarker} from './map.js';
 import {applyFilter} from './generate.js';
 import {resetForm} from './form.js';
 import {toggleDisabledState} from './form.js';
-
-const ALERT_SHOW_TIME = 5000;
-//const AD_FORM = document.querySelector('.ad-form');
-
-
-const API_URL = 'https://24.javascript.pages.academy/keksobooking';
-const ApiEndpoints = {
-  GET_AD: `${API_URL}/data`,
-  POST_AD: `${API_URL}/`,
-};
+import {ALERT_SHOW_TIME} from './vocab.js';
+import {ApiEndpoints} from './vocab.js';
 
 
 //обработка события отправки успех
@@ -111,12 +103,6 @@ const loadObjectsListFromServer = function(countCreateObject) {
       throw new Error(`${response.status} ${response.statusText}`);
     })
     .then((data) => {
-      //БЫЛО
-      // onLoadSuccess(data
-      //   .slice()
-      //   .sort(compareObjects)
-      //   .slice(0, countCreateObject));
-      //СТАЛО
       onLoadSuccess(getFilteredData(data,countCreateObject));
     })
     .catch(onLoadError);
