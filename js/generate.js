@@ -85,13 +85,11 @@ const createCustomPopup = function (card){
 //если цена совпадает с условиями - разрешим показ, иначе нет
 const getPriceAllow = (adPrice, priceFilterValue) => {
   if (
-    adPrice >= priceTypes.high && priceFilterValue === PriceFilterValues.HIGH ||
-    adPrice <= priceTypes.low && priceFilterValue === PriceFilterValues.LOW ||
-    (adPrice >= priceTypes.low && priceFilterValue <= priceTypes.high && priceFilterValue === PriceFilterValues.MIDDLE)) {
-    //return AdRanksByFilterType[FilterNames.PRICE];
+    adPrice > priceTypes.high && priceFilterValue === PriceFilterValues.HIGH ||
+    adPrice < priceTypes.low && priceFilterValue === PriceFilterValues.LOW ||
+    (adPrice >= priceTypes.low && adPrice <= priceTypes.high && priceFilterValue === PriceFilterValues.MIDDLE)) {
     return true; //разрешим показ
   }
-  //return 0;
   return false;
 };
 
@@ -114,27 +112,22 @@ const getAllowFromSelect = (adObject, selectEl,allow) => {
         selectEl.name === FilterNames.TYPE &&
         option.value !== FilterValuesByName[selectEl.name].ANY &&
         adObject.offer.type !== option.value) {
-        //rank += AdRanksByFilterType[selectEl.name];
         allow = false && allow; //если не выбран пункт эни и значения отборов не совпадают, то запретим загрузку (false)
       }
 
       if (allow &&
         selectEl.name === FilterNames.PRICE &&
         option.value !== FilterValuesByName[selectEl.name].ANY) {
-        // const priceRank = getPriceRank(adObject.offer.price, option.value);
-        // rank += priceRank;
         allow = getPriceAllow(adObject.offer.price, option.value) && allow; // гет прайс вернет можно ли показывать объявление или нет
       }
 
       if (allow &&
         selectEl.name === FilterNames.ROOMS) {
-        //rank += getGuestsOrRoomsRank(adObject.offer.rooms, option.value, FilterNames.ROOMS);
         allow = getGuestsOrRoomsAllow(adObject.offer.rooms, option.value, FilterNames.ROOMS) && allow;
       }
 
       if (allow &&
         selectEl.name === FilterNames.GUESTS) {
-        //rank += getGuestsOrRoomsRank(adObject.offer.guests, option.value, FilterNames.GUESTS);
         allow = getGuestsOrRoomsAllow(adObject.offer.guests, option.value, FilterNames.GUESTS) && allow;
       }
     }
@@ -163,11 +156,11 @@ const applyFilter = (adObject) => {
   const formElements = [...mapFilters.elements];
   formElements.forEach((formElement) => {
     if (allow && formElement.nodeName === NodeNames.SELECT) {
-      allow =  getAllowFromSelect(adObject, formElement,allow) && allow; //логическое И. Если хоть один false - то вся кострукция false
+      allow =  getAllowFromSelect(adObject, formElement,allow);
     }
 
     if (allow && formElement.nodeName === NodeNames.INPUT){
-      allow = getAllowFromCheckboxes(adObject, formElement) && allow;
+      allow = getAllowFromCheckboxes(adObject, formElement);
     }
   });
   return allow;

@@ -1,5 +1,4 @@
 import {createMarker} from './map.js';
-//import {compareObjects} from './generate.js';
 import {applyFilter} from './generate.js';
 import {resetForm} from './form.js';
 import {toggleDisabledState} from './form.js';
@@ -19,15 +18,14 @@ const onSubmitError = function () {
 
   const adFormErrorButton = document.querySelector('.error__button');
   adFormErrorButton.addEventListener('click', () => {
-    //document.getElementById('error').remove();
     document.querySelector('.error').classList.add('hidden');
   });
 };
 
 
 //отправка данных формы на сервер
-const sendDataToServer = function (AD_FORM) {
-  const formData = new FormData(AD_FORM);
+const sendDataToServer = function (adForm) {
+  const formData = new FormData(adForm);
 
   fetch(
     ApiEndpoints['POST_AD'],
