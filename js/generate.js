@@ -112,23 +112,23 @@ const getAllowFromSelect = (adObject, selectEl,allow) => {
         selectEl.name === FilterNames.TYPE &&
         option.value !== FilterValuesByName[selectEl.name].ANY &&
         adObject.offer.type !== option.value) {
-        allow = false && allow; //если не выбран пункт эни и значения отборов не совпадают, то запретим загрузку (false)
+        allow = false; //если не выбран пункт эни и значения отборов не совпадают, то запретим загрузку (false)
       }
 
       if (allow &&
         selectEl.name === FilterNames.PRICE &&
         option.value !== FilterValuesByName[selectEl.name].ANY) {
-        allow = getPriceAllow(adObject.offer.price, option.value) && allow; // гет прайс вернет можно ли показывать объявление или нет
+        allow = getPriceAllow(adObject.offer.price, option.value); // гет прайс вернет можно ли показывать объявление или нет
       }
 
       if (allow &&
         selectEl.name === FilterNames.ROOMS) {
-        allow = getGuestsOrRoomsAllow(adObject.offer.rooms, option.value, FilterNames.ROOMS) && allow;
+        allow = getGuestsOrRoomsAllow(adObject.offer.rooms, option.value, FilterNames.ROOMS);
       }
 
       if (allow &&
         selectEl.name === FilterNames.GUESTS) {
-        allow = getGuestsOrRoomsAllow(adObject.offer.guests, option.value, FilterNames.GUESTS) && allow;
+        allow = getGuestsOrRoomsAllow(adObject.offer.guests, option.value, FilterNames.GUESTS);
       }
     }
   });
