@@ -1,11 +1,9 @@
-import {setDocumentActiveOn} from './form.js';
-import {createCustomPopup} from './generate.js';
-import {START_LAT} from './vocab.js';
-import {START_LNG} from './vocab.js';
-import {PRECISION} from './vocab.js';
+import { setDocumentActiveOn } from './form.js';
+import { createCustomPopup } from './generate.js';
+import { START_LAT } from './vocab.js';
+import { START_LNG } from './vocab.js';
+import { PRECISION } from './vocab.js';
 
-
-/***********MAP*************/
 const map = L.map('map-canvas')
   .on('load', setDocumentActiveOn)
   .setView({
@@ -13,7 +11,6 @@ const map = L.map('map-canvas')
     lng: START_LNG,
   }, 10);
 
-//слой карты
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
@@ -21,10 +18,8 @@ L.tileLayer(
   },
 ).addTo(map);
 
-//слой меток
 const markerGroup = L.layerGroup().addTo(map);
 
-//главная иконка
 const mainPinIcon = L.icon({
   iconUrl: 'img/main-pin.svg',
   iconSize: [52, 52],
@@ -63,7 +58,6 @@ mainPinMarker.on('moveend', () => {
   document.getElementById('address').setAttribute('value', getReadableAddress(mainPinMarker.getLatLng()));
 });
 
-
 const createMarker = (currentPoint) => {
   const lat = currentPoint.location.lat;
   const lng = currentPoint.location.lng;
@@ -94,5 +88,5 @@ const deleteMarker = function () {
   resetMainPinMarker();
 };
 
-export {createMarker};
-export {deleteMarker};
+export { createMarker };
+export { deleteMarker };

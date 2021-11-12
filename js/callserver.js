@@ -1,18 +1,15 @@
-import {createMarker} from './map.js';
-import {applyFilter} from './generate.js';
-import {resetForm} from './form.js';
-import {toggleDisabledState} from './form.js';
-import {ALERT_SHOW_TIME} from './vocab.js';
-import {ApiEndpoints} from './vocab.js';
+import { createMarker } from './map.js';
+import { applyFilter } from './generate.js';
+import { resetForm } from './form.js';
+import { toggleDisabledState } from './form.js';
+import { ALERT_SHOW_TIME } from './vocab.js';
+import { ApiEndpoints } from './vocab.js';
 
-
-//обработка события отправки успех
 const onSubmitSuccess = function () {
   document.querySelector('.success').classList.remove('hidden');
   resetForm();
 };
 
-//обработка события отправки ошибка
 const onSubmitError = function () {
   document.querySelector('.error').classList.remove('hidden');
 
@@ -22,8 +19,6 @@ const onSubmitError = function () {
   });
 };
 
-
-//отправка данных формы на сервер
 const sendDataToServer = function (adForm) {
   const formData = new FormData(adForm);
 
@@ -40,23 +35,20 @@ const sendDataToServer = function (adForm) {
       }
       else {
         onSubmitError();
-      }})
+      }
+    })
     .catch(onSubmitError);
 };
 
-
-//обработка события получения успех
 const onLoadSuccess = function (similarObjects) {
 
-  for (let ind = 0; ind < similarObjects.length; ind++ ) {
+  for (let ind = 0; ind < similarObjects.length; ind++) {
     createMarker(similarObjects[ind]);
   }
   toggleDisabledState(document.querySelector('.map__filters'), false, 'map__filters--disabled');
 };
 
-//обработка события получения ошибка
 const onLoadError = function (errorMessage) {
-
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = 100;
   alertContainer.style.position = 'absolute';
@@ -77,16 +69,13 @@ const onLoadError = function (errorMessage) {
   }, ALERT_SHOW_TIME);
 };
 
-//фильтруем полученные с сервера данные.
-//Возвращаем указанное количество отфильтрованных
-const getFilteredData = function(data,countCreateObject) {
+const getFilteredData = function (data, countCreateObject) {
   return data
     .filter(applyFilter)
     .slice(0, countCreateObject);
 };
 
-//загрузка с сервера
-const loadObjectsListFromServer = function(countCreateObject) {
+const loadObjectsListFromServer = function (countCreateObject) {
   return fetch(
     ApiEndpoints['GET_AD'],
     {
@@ -101,11 +90,10 @@ const loadObjectsListFromServer = function(countCreateObject) {
       throw new Error(`${response.status} ${response.statusText}`);
     })
     .then((data) => {
-      onLoadSuccess(getFilteredData(data,countCreateObject));
+      onLoadSuccess(getFilteredData(data, countCreateObject));
     })
     .catch(onLoadError);
 };
 
-
-export {sendDataToServer};
-export {loadObjectsListFromServer};
+export { sendDataToServer };
+export { loadObjectsListFromServer };

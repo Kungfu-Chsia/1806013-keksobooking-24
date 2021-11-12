@@ -1,7 +1,7 @@
 export const NodeNames = {
-  IMG:'IMG',
-  INPUT:'INPUT',
-  SELECT:'SELECT',
+  IMG: 'IMG',
+  INPUT: 'INPUT',
+  SELECT: 'SELECT',
 };
 
 export const FilterNames = {
