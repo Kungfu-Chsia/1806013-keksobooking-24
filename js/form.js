@@ -21,7 +21,6 @@ const mapFilters = document.querySelector('.map__filters');
 const adFormPreview = document.querySelector('.ad-form-header__preview');
 const successForm = document.querySelector('.success');
 const errorForm = document.querySelector('.error');
-
 const minTitleName = adFormTitle.getAttribute('minlength');
 const maxTitleName = adFormTitle.getAttribute('maxlength');
 
