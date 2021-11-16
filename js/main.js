@@ -1,4 +1,4 @@
 import './map.js';
-import './callserver.js';
-import './generate.js';
+import './data-server.js';
+import './popup.js';
 import './form.js';

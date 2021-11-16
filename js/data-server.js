@@ -1,16 +1,16 @@
 import { createMarker } from './map.js';
-import { applyFilter } from './generate.js';
+import { applyFilter } from './filters.js';
 import { resetForm } from './form.js';
 import { toggleDisabledState } from './form.js';
-import { ALERT_SHOW_TIME } from './vocab.js';
-import { ApiEndpoints } from './vocab.js';
+import { ALERT_SHOW_TIME } from './consts.js';
+import { ApiEndpoint } from './consts.js';
 
-const onSubmitSuccess = function () {
+const onSubmitSuccess = () => {
   document.querySelector('.success').classList.remove('hidden');
   resetForm();
 };
 
-const onSubmitError = function () {
+const onSubmitError = () => {
   document.querySelector('.error').classList.remove('hidden');
 
   const adFormErrorButton = document.querySelector('.error__button');
@@ -19,11 +19,11 @@ const onSubmitError = function () {
   });
 };
 
-const sendDataToServer = function (adForm) {
+const sendDataToServer = (adForm) => {
   const formData = new FormData(adForm);
-
+  //console.log(adForm);
   fetch(
-    ApiEndpoints['POST_AD'],
+    ApiEndpoint['POST_AD'],
     {
       method: 'POST',
       body: formData,
@@ -40,15 +40,14 @@ const sendDataToServer = function (adForm) {
     .catch(onSubmitError);
 };
 
-const onLoadSuccess = function (similarObjects) {
-
-  for (let ind = 0; ind < similarObjects.length; ind++) {
-    createMarker(similarObjects[ind]);
-  }
+const onLoadSuccess = (similarObjects) => {
+  similarObjects.forEach((similarElement) => {
+    createMarker(similarElement);
+  });
   toggleDisabledState(document.querySelector('.map__filters'), false, 'map__filters--disabled');
 };
 
-const onLoadError = function (errorMessage) {
+const onLoadError = (errorMessage) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = 100;
   alertContainer.style.position = 'absolute';
@@ -69,31 +68,27 @@ const onLoadError = function (errorMessage) {
   }, ALERT_SHOW_TIME);
 };
 
-const getFilteredData = function (data, countCreateObject) {
-  return data
-    .filter(applyFilter)
-    .slice(0, countCreateObject);
-};
+const getFilteredData = (data, countCreateObject) => data
+  .filter(applyFilter)
+  .slice(0, countCreateObject);
 
-const loadObjectsListFromServer = function (countCreateObject) {
-  return fetch(
-    ApiEndpoints['GET_AD'],
-    {
-      method: 'GET',
-      credentials: 'same-origin',
-    },
-  )
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(`${response.status} ${response.statusText}`);
-    })
-    .then((data) => {
-      onLoadSuccess(getFilteredData(data, countCreateObject));
-    })
-    .catch(onLoadError);
-};
+const loadObjectsListFromServer = (countCreateObject) => fetch(
+  ApiEndpoint['GET_AD'],
+  {
+    method: 'GET',
+    credentials: 'same-origin',
+  },
+)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error(`${response.status} ${response.statusText}`);
+  })
+  .then((data) => {
+    onLoadSuccess(getFilteredData(data, countCreateObject));
+  })
+  .catch(onLoadError);
 
 export { sendDataToServer };
 export { loadObjectsListFromServer };

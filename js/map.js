@@ -1,8 +1,8 @@
 import { setDocumentActiveOn } from './form.js';
-import { createCustomPopup } from './generate.js';
-import { START_LAT } from './vocab.js';
-import { START_LNG } from './vocab.js';
-import { PRECISION } from './vocab.js';
+import { createCustomPopup } from './popup.js';
+import { START_LAT } from './consts.js';
+import { START_LNG } from './consts.js';
+import { PRECISION } from './consts.js';
 
 const map = L.map('map-canvas')
   .on('load', setDocumentActiveOn)
@@ -37,7 +37,7 @@ const mainPinMarker = L.marker(
   },
 );
 
-const getReadableAddress = function (Location) {
+const getReadableAddress = (Location) => {
   const Lat = Location.lat;
   const Lng = Location.lng;
   return `Широта: ${Lat.toFixed(PRECISION)} Долгота: ${Lng.toFixed(PRECISION)}`;
@@ -46,7 +46,7 @@ const getReadableAddress = function (Location) {
 mainPinMarker.addTo(map);
 document.getElementById('address').setAttribute('value', getReadableAddress(mainPinMarker.getLatLng()));
 
-const resetMainPinMarker = function () {
+const resetMainPinMarker = () => {
   mainPinMarker.setLatLng({
     lat: START_LAT,
     lng: START_LNG,
@@ -74,7 +74,7 @@ const createMarker = (currentPoint) => {
       lng,
     },
     {
-      PinIcon,
+      icon: PinIcon,
     },
   );
 
@@ -83,7 +83,7 @@ const createMarker = (currentPoint) => {
     .bindPopup(createCustomPopup(currentPoint));
 };
 
-const deleteMarker = function () {
+const deleteMarker = () => {
   markerGroup.clearLayers();
   resetMainPinMarker();
 };

@@ -1,10 +1,10 @@
-export const NodeNames = {
+export const NodeName = {
   IMG: 'IMG',
   INPUT: 'INPUT',
   SELECT: 'SELECT',
 };
 
-export const FilterNames = {
+export const FilterName = {
   TYPE: 'housing-type',
   PRICE: 'housing-price',
   ROOMS: 'housing-rooms',
@@ -12,7 +12,7 @@ export const FilterNames = {
   FEATURES: 'features',
 };
 
-export const TypeFilterValues = {
+export const TypeFilterValue = {
   ANY: 'any',
   BUNGALOW: 'bungalow',
   PALACE: 'palace',
@@ -21,23 +21,23 @@ export const TypeFilterValues = {
   HOUSE: 'house',
 };
 
-export const houseTypes = {
-  [TypeFilterValues.ANY]: 'any',
-  [TypeFilterValues.PALACE]: 'Дворец',
-  [TypeFilterValues.FLAT]: 'Квартира',
-  [TypeFilterValues.BUNGALOW]: 'Бунгало',
-  [TypeFilterValues.HOUSE]: 'Дом',
-  [TypeFilterValues.HOTEL]: 'Отель',
+export const houseType = {
+  [TypeFilterValue.ANY]: 'any',
+  [TypeFilterValue.PALACE]: 'Дворец',
+  [TypeFilterValue.FLAT]: 'Квартира',
+  [TypeFilterValue.BUNGALOW]: 'Бунгало',
+  [TypeFilterValue.HOUSE]: 'Дом',
+  [TypeFilterValue.HOTEL]: 'Отель',
 };
 
-export const PriceFilterValues = {
+export const PriceFilterValue = {
   ANY: 'any',
   LOW: 'low',
   MIDDLE: 'middle',
   HIGH: 'high',
 };
 
-export const FeatureFilterValues = {
+export const FeatureFilterValue = {
   WIFI: 'wifi',
   DISHWASHER: 'dishwasher',
   PARKING: 'parking',
@@ -46,23 +46,23 @@ export const FeatureFilterValues = {
   CONDITIONER: 'conditioner',
 };
 
-export const RoomsFilterValues = {
+export const RoomsFilterValue = {
   ANY: 'any',
   ONE: '1',
   TWO: '2',
   THREE: '3',
 };
 
-export const GuestsFilterValues = {
+export const GuestsFilterValue = {
   ANY: 'any',
   ONE: '1',
   TWO: '2',
   NOT_FOR_GUESTS: '0',
 };
 
-export const priceTypes = {
-  [PriceFilterValues.LOW]: 10000,
-  [PriceFilterValues.HIGH]: 50000,
+export const priceType = {
+  [PriceFilterValue.LOW]: 10000,
+  [PriceFilterValue.HIGH]: 50000,
 };
 
 export const HouseCost = {
@@ -82,7 +82,7 @@ export const ALERT_SHOW_TIME = 5000;
 
 export const API_URL = 'https://24.javascript.pages.academy/keksobooking';
 
-export const ApiEndpoints = {
+export const ApiEndpoint = {
   GET_AD: `${API_URL}/data`,
   POST_AD: `${API_URL}/`,
 };

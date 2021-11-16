@@ -1,138 +1,137 @@
 import './map.js';
 import { deleteMarker } from './map.js';
-import { sendDataToServer } from './callserver.js';
-import { loadObjectsListFromServer } from './callserver.js';
-import { NodeNames } from './vocab.js';
-import { HouseCost } from './vocab.js';
-import { ID_PALACE } from './vocab.js';
-import { PREVIEW_HEIGHT } from './vocab.js';
-import { PREVIEW_WIDTH } from './vocab.js';
-import { OBJECTS_COUNT } from './vocab.js';
+import { sendDataToServer } from './data-server.js';
+import { loadObjectsListFromServer } from './data-server.js';
+import { NodeName } from './consts.js';
+import { HouseCost } from './consts.js';
+import { ID_PALACE } from './consts.js';
+import { PREVIEW_HEIGHT } from './consts.js';
+import { PREVIEW_WIDTH } from './consts.js';
+import { OBJECTS_COUNT } from './consts.js';
 
-const adFormTitle = document.querySelector('.ad-form__title');
-const adFormPrice = document.querySelector('.ad-form__price');
-const adFormType = document.querySelector('.ad-form__type');
-const adFormRooms = document.querySelector('.ad-form__rooms');
-const adFormCapacity = document.querySelector('.ad-form__capacity');
-const adFormTimein = document.querySelector('.ad-form__timein');
-const adFormTimeout = document.querySelector('.ad-form__timeout');
-const adForm = document.querySelector('.ad-form');
+const formTitle = document.querySelector('.ad-form__title');
+const formPrice = document.querySelector('.ad-form__price');
+const formType = document.querySelector('.ad-form__type');
+const formRooms = document.querySelector('.ad-form__rooms');
+const formCapacity = document.querySelector('.ad-form__capacity');
+const formTimein = document.querySelector('.ad-form__timein');
+const formTimeout = document.querySelector('.ad-form__timeout');
+const mainForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
-const adFormPreview = document.querySelector('.ad-form-header__preview');
-const successForm = document.querySelector('.success');
-const errorForm = document.querySelector('.error');
-const minTitleName = adFormTitle.getAttribute('minlength');
-const maxTitleName = adFormTitle.getAttribute('maxlength');
+const formPreview = document.querySelector('.ad-form-header__preview');
 
-adFormTitle.addEventListener('invalid', () => {
-  if (adFormTitle.validity.tooShort) {
-    adFormTitle.setCustomValidity(`Заголовок должен состоять минимум из ${minTitleName} символов`);
-  } else if (adFormTitle.validity.tooLong) {
-    adFormTitle.setCustomValidity(`Заголовок не должен превышать ${maxTitleName} символов`);
-  } else if (adFormTitle.validity.valueMissing) {
-    adFormTitle.setCustomValidity('Обязательное поле');
+const minTitleName = formTitle.getAttribute('minlength');
+const maxTitleName = formTitle.getAttribute('maxlength');
+
+formTitle.addEventListener('invalid', () => {
+  if (formTitle.validity.tooShort) {
+    formTitle.setCustomValidity(`Заголовок должен состоять минимум из ${minTitleName} символов`);
+  } else if (formTitle.validity.tooLong) {
+    formTitle.setCustomValidity(`Заголовок не должен превышать ${maxTitleName} символов`);
+  } else if (formTitle.validity.valueMissing) {
+    formTitle.setCustomValidity('Обязательное поле');
   } else {
-    adFormTitle.setCustomValidity('');
+    formTitle.setCustomValidity('');
   }
 });
 
-adFormTitle.addEventListener('input', () => {
-  const valueLength = adFormTitle.value.length;
+formTitle.addEventListener('input', () => {
+  const valueLength = formTitle.value.length;
   if (valueLength < minTitleName) {
-    adFormTitle.setCustomValidity(`Ещё ${minTitleName - valueLength} симв.`);
+    formTitle.setCustomValidity(`Ещё ${minTitleName - valueLength} симв.`);
   } else if (valueLength > maxTitleName) {
-    adFormTitle.setCustomValidity(`Удалите лишние ${valueLength - maxTitleName} симв.`);
+    formTitle.setCustomValidity(`Удалите лишние ${valueLength - maxTitleName} симв.`);
   } else {
-    adFormTitle.setCustomValidity('');
+    formTitle.setCustomValidity('');
   }
-  adFormTitle.reportValidity();
+  formTitle.reportValidity();
 });
 
-adFormPrice.addEventListener('invalid', () => {
-  if (adFormPrice.validity.rangeOverflow) {
-    adFormPrice.setCustomValidity(`Цена должна быть меньше  ${adFormPrice.max}`);
+formPrice.addEventListener('invalid', () => {
+  if (formPrice.validity.rangeOverflow) {
+    formPrice.setCustomValidity(`Цена должна быть меньше  ${formPrice.max}`);
   } else {
-    adFormPrice.setCustomValidity('');
+    formPrice.setCustomValidity('');
   }
 });
 
-adFormPrice.addEventListener('input', () => {
-  const currentValue = adFormPrice.value;
-  if (currentValue > adFormPrice.max) {
-    adFormPrice.setCustomValidity(`Цена должна быть меньше  ${adFormPrice.max}`);
-  } else if (currentValue < adFormPrice.min) {
-    adFormPrice.setCustomValidity(`Цена должна быть больше  ${adFormPrice.min}`);
+formPrice.addEventListener('input', () => {
+  const currentValue = formPrice.value;
+  if (currentValue > formPrice.max) {
+    formPrice.setCustomValidity(`Цена должна быть меньше  ${formPrice.max}`);
+  } else if (currentValue < formPrice.min) {
+    formPrice.setCustomValidity(`Цена должна быть больше  ${formPrice.min}`);
   } else {
-    adFormPrice.setCustomValidity('');
+    formPrice.setCustomValidity('');
   }
-  adFormPrice.reportValidity();
+  formPrice.reportValidity();
 });
 
-const checkPrice = function () {
-  const minPrice = HouseCost[adFormType.value];
-  adFormPrice.setAttribute('placeholder', minPrice);
-  adFormPrice.setAttribute('min', minPrice);
+const checkPrice = () => {
+  const minPrice = HouseCost[formType.value];
+  formPrice.setAttribute('placeholder', minPrice);
+  formPrice.setAttribute('min', minPrice);
 
-  if (adFormPrice.value > 0 && adFormPrice.value < adFormPrice.min) {
-    adFormPrice.setCustomValidity(`Цена должна быть не меньше  ${adFormPrice.min}`);
+  if (formPrice.value > 0 && formPrice.value < formPrice.min) {
+    formPrice.setCustomValidity(`Цена должна быть не меньше  ${formPrice.min}`);
   }
   else {
-    adFormPrice.setCustomValidity('');
+    formPrice.setCustomValidity('');
   }
-  adFormPrice.reportValidity();
+  formPrice.reportValidity();
 };
 
-adFormType.addEventListener('change', checkPrice);
-adFormPrice.addEventListener('change', checkPrice);
+formType.addEventListener('change', checkPrice);
+formPrice.addEventListener('change', checkPrice);
 
-adFormCapacity.addEventListener('change', () => {
-  adFormCapacity.setCustomValidity('');
+formCapacity.addEventListener('change', () => {
+  formCapacity.setCustomValidity('');
 });
 
-adFormRooms.addEventListener('change', () => {
-  const currentValue = adFormRooms.value;
+formRooms.addEventListener('change', () => {
+  const currentValue = formRooms.value;
 
   const optionCapacity = document.getElementById('capacity').getElementsByTagName('option');
-  for (let i = 0; i < optionCapacity.length; i++) {
-    optionCapacity[i].disabled = true;
-  }
+  optionCapacity.forEach((currentOption) => {
+    currentOption.disabled = true;
+  });
   if (currentValue === ID_PALACE) {
     optionCapacity[optionCapacity.length - 1].disabled = false;
   } else {
-    for (let ind = 0; ind < currentValue; ind++) {
-      optionCapacity[ind].disabled = false;
+    for (let index = 0; index < currentValue; index++) {
+      optionCapacity[index].disabled = false;
     }
   }
 
-  adFormCapacity.setCustomValidity('');
-  for (let i = 0; i < optionCapacity.length; i++) {
-    if (adFormCapacity[i].disabled && adFormCapacity[i].selected) {
-      adFormCapacity.setCustomValidity('Выбрано не корректное значение');
+  formCapacity.setCustomValidity('');
+  optionCapacity.forEach((currentOption) => {
+    if (currentOption.disabled && currentOption.selected) {
+      formCapacity.setCustomValidity('Выбрано не корректное значение');
     }
-  }
+  });
 
-  adFormCapacity.reportValidity();
+  formCapacity.reportValidity();
 });
 
-adFormTimein.addEventListener('change', () => {
-  const currentValue = adFormTimein.value;
+formTimein.addEventListener('change', () => {
+  const currentValue = formTimein.value;
 
   const optionTimeout = document.getElementById('timeout').getElementsByTagName('option');
-  for (let i = 0; i < optionTimeout.length; i++) {
-    if (optionTimeout[i].value === currentValue) {
-      optionTimeout[i].selected = true;
+  optionTimeout.forEach((currentTimeout) => {
+    if (currentTimeout.value === currentValue) {
+      currentTimeout.selected = true;
     }
-  }
+  });
 });
 
-adFormTimeout.addEventListener('change', () => {
-  const currentValue = adFormTimeout.value;
+formTimeout.addEventListener('change', () => {
+  const currentValue = formTimeout.value;
   const optionTimein = document.getElementById('timein').getElementsByTagName('option');
-  for (let i = 0; i < optionTimein.length; i++) {
-    if (optionTimein[i].value === currentValue) {
-      optionTimein[i].selected = true;
+  optionTimein.forEach((currentTimein) => {
+    if (currentTimein.value === currentValue) {
+      currentTimein.selected = true;
     }
-  }
+  });
 });
 
 
@@ -141,25 +140,25 @@ document.getElementById('address').setAttribute('readonly', true);
 const inputAvatar = document.getElementById('avatar');
 inputAvatar.setAttribute('accept', 'image/png, image/jpeg');
 inputAvatar.addEventListener('change', () => {
-  for (let i = 0; i < adFormPreview.childNodes.length; i++) {
-    if (adFormPreview.childNodes[i].nodeName === NodeNames.IMG) {
-      adFormPreview.childNodes[i].setAttribute('src', URL.createObjectURL(inputAvatar.files[0]));
+  formPreview.childNodes.forEach((currentAvatar) => {
+    if (currentAvatar.nodeName === NodeName.IMG) {
+      currentAvatar.setAttribute('src', URL.createObjectURL(inputAvatar.files[0]));
     }
-  }
+  });
 });
 
 const inputImage = document.getElementById('images');
 inputImage.setAttribute('accept', 'image/png, image/jpeg');
 inputImage.addEventListener('change', () => {
-  const elem = document.createElement('img');
-  elem.setAttribute('src', URL.createObjectURL(inputImage.files[0]));
-  elem.setAttribute('height', PREVIEW_HEIGHT);
-  elem.setAttribute('width', PREVIEW_WIDTH);
-  document.querySelector('.ad-form__photo').appendChild(elem);
+  const picture = document.createElement('img');
+  picture.setAttribute('src', URL.createObjectURL(inputImage.files[0]));
+  picture.setAttribute('height', PREVIEW_HEIGHT);
+  picture.setAttribute('width', PREVIEW_WIDTH);
+  document.querySelector('.ad-form__photo').appendChild(picture);
 });
 
 
-const toggleDisabledState = function (formElement, isDisabled, disabledClassName) {
+const toggleDisabledState = (formElement, isDisabled, disabledClassName) => {
   if (isDisabled === true) {
     formElement.classList.add(disabledClassName);
   }
@@ -167,23 +166,23 @@ const toggleDisabledState = function (formElement, isDisabled, disabledClassName
     formElement.classList.remove(disabledClassName);
   }
 
-  const elements = formElement.elements;
-  for (let i = 0; i < elements.length; i++) {
-    elements[i].disabled = isDisabled;
-  }
+  const elements = [...formElement.elements];
+  elements.forEach((currentElement) => {
+    currentElement.disabled = isDisabled;
+  });
 };
 
-const setDocumentActiveOn = function () {
-  toggleDisabledState(adForm, false, 'ad-form--disabled');
+const setDocumentActiveOn = () => {
+  toggleDisabledState(mainForm, false, 'ad-form--disabled');
   loadObjectsListFromServer(OBJECTS_COUNT);
 };
 
-const setDocumentActiveOff = function () {
-  toggleDisabledState(adForm, true, 'ad-form--disabled');
+const setDocumentActiveOff = () => {
+  toggleDisabledState(mainForm, true, 'ad-form--disabled');
   toggleDisabledState(mapFilters, true, 'map__filters--disabled');
 };
 
-const applyFilterOnForm = function () {
+const applyFilterOnForm = () => {
   deleteMarker();
   loadObjectsListFromServer(OBJECTS_COUNT);
 };
@@ -192,8 +191,8 @@ mapFilters.addEventListener('change', () => {
   applyFilterOnForm();
 });
 
-const resetForm = function () {
-  adForm.reset();
+const resetForm = () => {
+  mainForm.reset();
   mapFilters.reset();
   inputImage.setAttribute('src', ' ');
   deleteMarker();
@@ -202,14 +201,14 @@ const resetForm = function () {
   loadObjectsListFromServer(OBJECTS_COUNT);
 };
 
-adForm.addEventListener('reset', resetForm);
+mainForm.addEventListener('reset', resetForm);
 
-adForm.addEventListener('submit', (evt) => {
+mainForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  sendDataToServer(adForm);
+  sendDataToServer(mainForm);
 });
 
-const createFormSuccessError = function () {
+const createFormSuccessError = () => {
   const successFormTemplate = document.querySelector('#success')
     .content
     .querySelector('.success');
@@ -227,7 +226,11 @@ const createFormSuccessError = function () {
   errorFormCreated.classList.add('hidden');
 };
 
-const hideModalForm = function (modalForm, classHide) {
+createFormSuccessError();
+const successForm = document.querySelector('.success');
+const errorForm = document.querySelector('.error');
+
+const hideModalForm = (modalForm, classHide) => {
   if (modalForm !== null && !modalForm.classList.contains(classHide)) {
     modalForm.classList.add(classHide);
   }
@@ -246,7 +249,6 @@ document.addEventListener('click', () => {
   hideModalForm(errorForm, 'hidden');
 });
 
-createFormSuccessError();
 setDocumentActiveOff();
 
 export { setDocumentActiveOn };
