@@ -8,6 +8,8 @@ import { ID_PALACE } from './consts.js';
 import { PREVIEW_HEIGHT } from './consts.js';
 import { PREVIEW_WIDTH } from './consts.js';
 import { OBJECTS_COUNT } from './consts.js';
+import { GuestsFilterValue } from './consts.js';
+
 
 const formTitle = document.querySelector('.ad-form__title');
 const formPrice = document.querySelector('.ad-form__price');
@@ -89,19 +91,19 @@ formCapacity.addEventListener('change', () => {
 });
 
 formRooms.addEventListener('change', () => {
-  const currentValue = formRooms.value;
+  const roomValue = formRooms.value;
 
-  const optionCapacity = document.getElementById('capacity').getElementsByTagName('option');
+  const optionCapacity = [...document.getElementById('capacity').getElementsByTagName('option')];
   optionCapacity.forEach((currentOption) => {
-    currentOption.disabled = true;
-  });
-  if (currentValue === ID_PALACE) {
-    optionCapacity[optionCapacity.length - 1].disabled = false;
-  } else {
-    for (let index = 0; index < currentValue; index++) {
-      optionCapacity[index].disabled = false;
+    const capacityValue = currentOption.value;
+    if (roomValue === ID_PALACE) {
+      currentOption.disabled = capacityValue !== GuestsFilterValue.NOT_FOR_GUESTS;
+    } else if (capacityValue !== GuestsFilterValue.NOT_FOR_GUESTS && capacityValue <= roomValue) {
+      currentOption.disabled = false;
+    } else {
+      currentOption.disabled = true;
     }
-  }
+  });
 
   formCapacity.setCustomValidity('');
   optionCapacity.forEach((currentOption) => {
@@ -116,7 +118,7 @@ formRooms.addEventListener('change', () => {
 formTimein.addEventListener('change', () => {
   const currentValue = formTimein.value;
 
-  const optionTimeout = document.getElementById('timeout').getElementsByTagName('option');
+  const optionTimeout = [...document.getElementById('timeout').getElementsByTagName('option')];
   optionTimeout.forEach((currentTimeout) => {
     if (currentTimeout.value === currentValue) {
       currentTimeout.selected = true;
@@ -126,7 +128,7 @@ formTimein.addEventListener('change', () => {
 
 formTimeout.addEventListener('change', () => {
   const currentValue = formTimeout.value;
-  const optionTimein = document.getElementById('timein').getElementsByTagName('option');
+  const optionTimein = [...document.getElementById('timein').getElementsByTagName('option')];
   optionTimein.forEach((currentTimein) => {
     if (currentTimein.value === currentValue) {
       currentTimein.selected = true;

@@ -21,7 +21,6 @@ const onSubmitError = () => {
 
 const sendDataToServer = (adForm) => {
   const formData = new FormData(adForm);
-  //console.log(adForm);
   fetch(
     ApiEndpoint['POST_AD'],
     {
