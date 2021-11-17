@@ -1,16 +1,16 @@
 import { createMarker } from './map.js';
 import { applyFilter } from './filters.js';
 import { resetForm } from './form.js';
-import { toggleDisabledState } from './form.js';
+import { switchDisabledState } from './form.js';
 import { ALERT_SHOW_TIME } from './consts.js';
 import { ApiEndpoint } from './consts.js';
 
-const onSubmitSuccess = () => {
+const SubmitSuccess = () => {
   document.querySelector('.success').classList.remove('hidden');
   resetForm();
 };
 
-const onSubmitError = () => {
+const SubmitError = () => {
   document.querySelector('.error').classList.remove('hidden');
 
   const adFormErrorButton = document.querySelector('.error__button');
@@ -30,23 +30,23 @@ const sendDataToServer = (adForm) => {
   )
     .then((response) => {
       if (response.ok) {
-        onSubmitSuccess();
+        SubmitSuccess();
       }
       else {
-        onSubmitError();
+        SubmitError();
       }
     })
-    .catch(onSubmitError);
+    .catch(SubmitError);
 };
 
-const onLoadSuccess = (similarObjects) => {
+const LoadSuccess = (similarObjects) => {
   similarObjects.forEach((similarElement) => {
     createMarker(similarElement);
   });
-  toggleDisabledState(document.querySelector('.map__filters'), false, 'map__filters--disabled');
+  switchDisabledState(document.querySelector('.map__filters'), false, 'map__filters--disabled');
 };
 
-const onLoadError = (errorMessage) => {
+const LoadError = (errorMessage) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = 100;
   alertContainer.style.position = 'absolute';
@@ -85,9 +85,9 @@ const loadObjectsListFromServer = (countCreateObject) => fetch(
     throw new Error(`${response.status} ${response.statusText}`);
   })
   .then((data) => {
-    onLoadSuccess(getFilteredData(data, countCreateObject));
+    LoadSuccess(getFilteredData(data, countCreateObject));
   })
-  .catch(onLoadError);
+  .catch(LoadError);
 
 export { sendDataToServer };
 export { loadObjectsListFromServer };

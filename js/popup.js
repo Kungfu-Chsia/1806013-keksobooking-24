@@ -1,6 +1,6 @@
 import { houseType } from './consts.js';
 
-const setupValueOrHideEmpty = (element, nameProperty, value) => {
+const setValueOrHideEmpty = (element, nameProperty, value) => {
   if (value) {
     element[nameProperty] = value;
     element.classList.remove('hidden');
@@ -17,14 +17,14 @@ const createCustomPopup = (card) => {
     .querySelector('.popup');
 
   const cardElement = templateCard.cloneNode(true);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__avatar'), 'src', card.author.avatar);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__title'), 'textContent', card.offer.title);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--address'), 'textContent', card.offer.address);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--price'), 'textContent', `${card.offer.price} ₽/ночь`);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__type'), 'textContent', houseType[card.offer.type]);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--capacity'), 'textContent', `${card.offer.rooms} комнаты для ${card.offer.guests} гостей.`);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__text--time'), 'textContent', `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`);
-  setupValueOrHideEmpty(cardElement.querySelector('.popup__description'), 'textContent', card.offer.description);
+  setValueOrHideEmpty(cardElement.querySelector('.popup__avatar'), 'src', card.author.avatar);
+  setValueOrHideEmpty(cardElement.querySelector('.popup__title'), 'textContent', card.offer.title);
+  setValueOrHideEmpty(cardElement.querySelector('.popup__text--address'), 'textContent', card.offer.address);
+  setValueOrHideEmpty(cardElement.querySelector('.popup__text--price'), 'textContent', `${card.offer.price} ₽/ночь`);
+  setValueOrHideEmpty(cardElement.querySelector('.popup__type'), 'textContent', houseType[card.offer.type]);
+  setValueOrHideEmpty(cardElement.querySelector('.popup__text--capacity'), 'textContent', `${card.offer.rooms} комнаты для ${card.offer.guests} гостей.`);
+  setValueOrHideEmpty(cardElement.querySelector('.popup__text--time'), 'textContent', `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`);
+  setValueOrHideEmpty(cardElement.querySelector('.popup__description'), 'textContent', card.offer.description);
 
   const featuresList = checkIncomingArray(card.offer.features);
   const photosList = checkIncomingArray(card.offer.photos);
@@ -47,7 +47,7 @@ const createCustomPopup = (card) => {
 
   photosList.forEach((currentPhoto) => {
     const clone = photoElement.cloneNode();
-    setupValueOrHideEmpty(clone, 'src', currentPhoto);
+    setValueOrHideEmpty(clone, 'src', currentPhoto);
     photosListEl.appendChild(clone);
   });
   return cardElement;

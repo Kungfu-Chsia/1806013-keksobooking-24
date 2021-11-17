@@ -160,7 +160,7 @@ inputImage.addEventListener('change', () => {
 });
 
 
-const toggleDisabledState = (formElement, isDisabled, disabledClassName) => {
+const switchDisabledState = (formElement, isDisabled, disabledClassName) => {
   if (isDisabled === true) {
     formElement.classList.add(disabledClassName);
   }
@@ -175,13 +175,13 @@ const toggleDisabledState = (formElement, isDisabled, disabledClassName) => {
 };
 
 const setDocumentActiveOn = () => {
-  toggleDisabledState(mainForm, false, 'ad-form--disabled');
+  switchDisabledState(mainForm, false, 'ad-form--disabled');
   loadObjectsListFromServer(OBJECTS_COUNT);
 };
 
 const setDocumentActiveOff = () => {
-  toggleDisabledState(mainForm, true, 'ad-form--disabled');
-  toggleDisabledState(mapFilters, true, 'map__filters--disabled');
+  switchDisabledState(mainForm, true, 'ad-form--disabled');
+  switchDisabledState(mapFilters, true, 'map__filters--disabled');
 };
 
 const applyFilterOnForm = () => {
@@ -199,7 +199,7 @@ const resetForm = () => {
   inputImage.setAttribute('src', ' ');
   deleteMarker();
 
-  toggleDisabledState(mapFilters, true, 'map__filters--disabled');
+  switchDisabledState(mapFilters, true, 'map__filters--disabled');
   loadObjectsListFromServer(OBJECTS_COUNT);
 };
 
@@ -255,5 +255,5 @@ setDocumentActiveOff();
 
 export { setDocumentActiveOn };
 export { resetForm };
-export { toggleDisabledState };
+export { switchDisabledState };
 export { mapFilters };
